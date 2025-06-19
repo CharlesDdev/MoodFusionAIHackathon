@@ -120,28 +120,19 @@ The MoodFusion Recommender follows a client-server architecture with specialized
 3. Simultaneously, two asynchronous API calls are made from the frontend to the deployed Cloud Run agents: meal-agent and movie-agent.
 
 4. **Meal Agent (Built with ADK Principles):**
-
-Receives mood and mealContext.
-
-Uses Gemini to infer food keywords matching the mood and meal context.
-
-Calls Spoonacular API with these keywords and a meal type filter, ensuring no desserts.
-
-Selects a random recipe and returns its title, image, description, and source URL.
+    * Receives mood and mealContext.
+    * Uses Gemini to infer food keywords matching the mood and meal context.
+    * Calls Spoonacular API with these keywords and a meal type filter, ensuring no desserts.
+    * Selects a random recipe and returns its title, image, description, and source URL.
 
 5. **Movie Agent (Built with ADK Principles):**
+    * Receives mood.
+    * Uses Gemini to infer movie genres matching the mood, explicitly avoiding animated/family genres for general moods.
+    * Calls TMDB Discover API to find movies by genre.  
+    * Makes a second TMDB API call to fetch detailed information (year, runtime, ratings) for the selected movie.
+    * Returns movie title, poster URL, description, source URL, and detailed info.
 
-Receives mood.
-
-Uses Gemini to infer movie genres matching the mood, explicitly avoiding animated/family genres for general moods.
-
-Calls TMDB Discover API to find movies by genre.
-
-Makes a second TMDB API call to fetch detailed information (year, runtime, ratings) for the selected movie.
-
-Returns movie title, poster URL, description, source URL, and detailed info.
-
-The frontend receives responses from both agents and dynamically updates the UI to display the meal and movie recommendations.
+6. The frontend receives responses from both agents and dynamically updates the UI to display the meal and movie recommendations.
 
 ## Google Agent Development Kit (ADK) Usage
 The Google Agent Development Kit (ADK) provided the foundational tools and architectural patterns that significantly streamlined the development of our MoodFusion Recommender.
