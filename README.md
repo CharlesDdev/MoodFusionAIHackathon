@@ -263,17 +263,17 @@ cd ..
 Open frontend/index.html directly in your web browser. All interactions will be handled by your deployed Cloud Run agents.
 
 ## Usage
-**Enter your Mood:** Type how you're feeling into the text input box (e.g., "happy," "tired," "adventurous").
+1. **Enter your Mood:** Type how you're feeling into the text input box (e.g., "happy," "tired," "adventurous").
 
-**Use Quick Mood:** Alternatively, select a pre-defined mood from the dropdown for rapid recommendation generation.
+2. **Use Quick Mood:** Alternatively, select a pre-defined mood from the dropdown for rapid recommendation generation.
 
-**Get Recommendations:** Click the "Get Recommendations" button (or select from the dropdown) to receive a paired meal and movie.
+3. **Get Recommendations:** Click the "Get Recommendations" button (or select from the dropdown) to receive a paired meal and movie.
 
-**Explore Meal Details:** View the meal title, image, description, and click "View Full Recipe" to go to the Spoonacular source.
+4. **Explore Meal Details:** View the meal title, image, description, and click "View Full Recipe" to go to the Spoonacular source.
 
-**Explore Movie Details:** View the movie title, poster, and description. Hover over the movie card to reveal additional details like year, runtime, MPAA rating, and TMDB user score. Click "View on TMDB" for more info.
+5. **Explore Movie Details:** View the movie title, poster, and description. Hover over the movie card to reveal additional details like year, runtime, MPAA rating, and TMDB user score. Click "View on TMDB" for more info.
 
-**Switch Themes:** Use the "Light" and "Dark" buttons to toggle the application's theme. Your preference will be saved.
+6. **Switch Themes:** Use the "Light" and "Dark" buttons to toggle the application's theme. Your preference will be saved.
 
 ## Future Enhancements
 * **Mobile Application (Flutter):** Port the frontend to a native mobile application using Flutter, enabling use on phones and tablets, leveraging the existing backend microservices.
@@ -281,17 +281,11 @@ Open frontend/index.html directly in your web browser. All interactions will be 
 * **Refined Movie Genre Inference:** Further enhance the movie agent's Gemini prompt and/or implement post-processing to completely eliminate animated/kid-focused content for non-child-specific moods, ensuring more precise adult/teenager-oriented recommendations.
 
 * **User Accounts & Favorites:** Allow users to save their favorite meal/movie pairings.
-
 * **Recommendation History:** Keep a log of past recommendations.
-
 * **More Recommendation Categories:** Integrate music, books, activities, or games.
-
 * **Refined Filtering:** Add more explicit filters (e.g., "vegetarian meal," "action movie only").
-
 * **Advanced Mood Analysis:** Utilize more sophisticated NLP for deeper mood understanding.
-
 * **User Feedback Loop:** Allow users to rate recommendations, improving future suggestions.
-
 * **Custom Modals for Alerts:** Replace native alert() with custom UI for better styling.
 
 ## Challenges & Learnings
