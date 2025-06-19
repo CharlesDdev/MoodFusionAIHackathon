@@ -2,23 +2,41 @@
 ## Find Your Perfect Vibe: Curated Meals & Movies for Every Mood!
 
 ## Table of Contents
-- [Cinemunch - Meal and Movie Recommender](#cinemunch---meal-and-movie-recommender)
-  - [Find Your Perfect Vibe: Curated Meals \& Movies for Every Mood!](#find-your-perfect-vibe-curated-meals--movies-for-every-mood)
-  - [Table of Contents](#table-of-contents)
-  - [Demo](#demo)
-  - [Problem Statement](#problem-statement)
-  - [Solution](#solution)
-  - [Key Features](#key-features)
-  - [Technology Stack](#technology-stack)
-  - [Architecture](#architecture)
-  - [Workflow:](#workflow)
-  - [Google Agent Development Kit (ADK) Usage](#google-agent-development-kit-adk-usage)
-  - [Setup \& Deployment](#setup--deployment)
-  - [Usage](#usage)
-  - [Future Enhancements](#future-enhancements)
-  - [Challenges \& Learnings](#challenges--learnings)
-  - [Attribution](#attribution)
-  - [Contact](#contact)
+1. [Demo](#demo)
+  
+2. [Problem Statement](#problem-statement)
+  
+3. [Solution](#solution)
+  
+4. [Key Features](#key-features)
+  
+5. [Technology Stack](#technology-stack)
+  
+6. [Architecture](#architecture)
+
+7. [Workflow:](#workflow)
+
+8. [Google Agent Development Kit (ADK) Usage](#google-agent-development-kit-adk-usage)
+
+9. [Setup \& Deployment](#setup--deployment)
+
+    * [Prerequisites](#prerequisites)
+  
+    * [Google Cloud Setup](#google-cloud-setup)
+  
+    * [Agent Deployment (Backend)](#agent-deployment-(backend))
+  
+    * [Frontend Setup](#frontend-setup)
+  
+10. [Usage](#usage)
+
+11. [Future Enhancements](#future-enhancements)
+
+12. [Challenges \& Learnings](#challenges--learnings)
+
+13. [Attribution](#attribution)
+
+14. [Contact](#contact)
 
 ## Demo
 (If you have deployed the frontend publicly, insert a link here. Otherwise, judges will follow the "Setup & Deployment" instructions to run it locally.)
