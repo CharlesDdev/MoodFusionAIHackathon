@@ -20,13 +20,13 @@
 
 9. [Setup \& Deployment](#setup--deployment)
 
-  * [Prerequisites](#prerequisites)
+    * [Prerequisites](#prerequisites)
   
-  * [Google Cloud Setup](#google-cloud-setup)
+    * [Google Cloud Setup](#google-cloud-setup)
     
-  * [Agent Deployment (Backend)](#agent-deployment-(backend))
+    * [Agent Deployment (Backend)](#agent-deployment-(backend))
 
-  * [Frontend Setup](#frontend-setup)
+    * [Frontend Setup](#frontend-setup)
   
 10. [Usage](#usage)
 
