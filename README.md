@@ -1,108 +1,89 @@
-Cinemunch - Meal and Movie Recommender
-Find Your Perfect Vibe: Curated Meals & Movies for Every Mood!
+# Cinemunch - Meal and Movie Recommender
+## Find Your Perfect Vibe: Curated Meals & Movies for Every Mood!
 
 ## Table of Contents
 
-* [Demo](#demo)
-* [Problem Statement](#problem-statement)
-* [Solution](#solution)
-* [Key Features](#key-features)
-* [Technology Stack](#technology-stack)
-* [Architecture](#architecture)
-* [Google Agent Development Kit (ADK) Usage](#google-agent-development-kit-adk-usage)
-* [Setup & Deployment](#setup--deployment)
-    * [Prerequisites](#prerequisites)
-    * [Google Cloud Setup](#google-cloud-setup)
-    * [Agent Deployment (Backend)](#agent-deployment-backend)
-    * [Frontend Setup](#frontend-setup)
-* [Usage](#usage)
-* [Future Enhancements](#future-enhancements)
-* [Challenges & Learnings](#challenges--learnings)
-* [Attribution](#attribution)
-* [Contact](#contact)
+- [Cinemunch - Meal and Movie Recommender](#cinemunch---meal-and-movie-recommender)
+  - [Find Your Perfect Vibe: Curated Meals \& Movies for Every Mood!](#find-your-perfect-vibe-curated-meals--movies-for-every-mood)
+  - [Table of Contents](#table-of-contents)
+  - [Demo](#demo)
+  - [Problem Statement](#problem-statement)
+  - [Solution](#solution)
+  - [Key Features](#key-features)
+  - [Technology Stack](#technology-stack)
+  - [Architecture](#architecture)
+  - [Google Agent Development Kit (ADK) Usage](#google-agent-development-kit-adk-usage)
+  - [Setup \& Deployment](#setup--deployment)
+  - [Usage](#usage)
+  - [Future Enhancements](#future-enhancements)
+  - [Challenges \& Learnings](#challenges--learnings)
+  - [Attribution](#attribution)
+  - [Contact](#contact)
 
-Demo
+## Demo
 (If you have deployed the frontend publicly, insert a link here. Otherwise, judges will follow the "Setup & Deployment" instructions to run it locally.)
 
-Live Demo (if applicable): https://your-public-frontend-url.com
+* **Live Demo (if applicable):** https://your-public-frontend-url.com
 
-Video Demo (if applicable): [Link to a short video showcasing features]
+* **Video Demo (if applicable):** [Link to a short video showcasing features]
 
-Problem Statement
-In an age of endless content, deciding "what to eat" and "what to watch" can be overwhelming. Users often seek recommendations that align with their current mood, but generic suggestions fall flat. Existing platforms rarely offer a cohesive, mood-aware pairing of meal and entertainment, leaving users to juggle multiple apps and decision fatigue. This hackathon challenged us to build intelligent, modular agents to solve real-world problems.
+## Problem Statement
 
-Solution
-Cinemunch's MoodFusion Recommender is an intelligent web application built using the Google Agent Development Kit (ADK). It solves the decision fatigue problem by providing curated meal and movie recommendations based on the user's emotional state and the time of day. Leveraging the power of Generative AI (Gemini API), specialized external APIs (Spoonacular, TMDB), and the scalable microservice architecture facilitated by the ADK, MoodFusion offers personalized pairings, simplifying decision-making and enhancing the user experience.
+In an age of endless content, deciding "what to eat" and "what to watch" can be overwhelming. Users often seek recommendations that align with their current mood, but generic suggestions fall flat. Existing platforms rarely offer a cohesive, mood-aware pairing of meal and entertainment, leaving users to juggle multiple apps and decision fatigue. This hackathon challenged me to build intelligent, modular agents to solve real-world problems.
 
-Key Features
-Mood-Based Recommendations: Get personalized meal and movie suggestions by simply typing or selecting your current mood (e.g., "happy," "cozy," "adventurous").
+## Solution
 
-Time-of-Day Aware Meals: The meal agent intelligently detects the time of day (morning, midday, evening) and tailors meal recommendations accordingly (Breakfast, Lunch, or Dinner).
+Cinemunch's Meal & Movie Recommender is an intelligent web application built using the Google Agent Development Kit (ADK). It solves the decision fatigue problem by providing curated meal and movie recommendations based on the user's emotional state and the time of day. Leveraging the power of Generative AI (Gemini API), specialized external APIs (Spoonacular, TMDB), and the scalable microservice architecture facilitated by the ADK, MoodFusion offers personalized pairings, simplifying decision-making and enhancing the user experience.
 
-Intelligent Meal Filtering: Robustly excludes desserts, sweet snacks, and inappropriate meal types (e.g., no muffins for dinner!).
+## Key Features
 
-Diverse Movie Selections: The movie agent's recommendations are now highly diversified, avoiding excessive animated/kid-like films for adult-oriented moods, and providing a wider range of genres.
+    * **Mood-Based Recommendations:** Get personalized meal and movie suggestions by simply typing or selecting your current mood (e.g., "happy," "cozy," "adventurous").
 
-Interactive Movie Details (Hover Effect): Hover over a movie card to instantly reveal key details like release year, runtime, MPAA rating, and TMDB user score, enhancing usability.
+    * **Time-of-Day Aware Meals:** The meal agent intelligently detects the time of day (morning, midday, evening) and tailors meal recommendations accordingly (Breakfast, Lunch, or Dinner).
 
-Quick Mood Dropdown: A convenient dropdown with pre-defined moods allows for rapid recommendation generation without typing.
+    * **Intelligent Meal Filtering:** Robustly excludes desserts, sweet snacks, and inappropriate meal types (e.g., no muffins for dinner!).
 
-Dynamic Dark Mode: Toggle between light and dark themes with a click, and the application remembers your preference across sessions using localStorage.
+    * **Diverse Movie Selections:** The movie agent's recommendations are now highly diversified, avoiding excessive animated/kid-like films for adult-oriented moods, and providing a wider range of genres.
 
-Responsive UI/UX: A clean, modern interface built with Tailwind CSS ensures optimal viewing and interaction across all devices (desktop, tablet, mobile).
+    * **Interactive Movie Details (Hover Effect):** Hover over a movie card to instantly reveal key details like release year, runtime, MPAA rating, and TMDB user score, enhancing usability.
 
-Robust Error Handling: Provides user feedback for empty inputs and handles API errors gracefully.
+    * **Quick Mood Dropdown:** A convenient dropdown with pre-defined moods allows for rapid recommendation generation without typing.
 
-Containerized Microservices: Backend logic is separated into independent, scalable Cloud Run services (meal-agent, movie-agent), developed using the principles of the ADK.
+    * **Dynamic Dark Mode:** Toggle between light and dark themes with a click, and the application remembers your preference across sessions using localStorage.
 
-Technology Stack
-Google Agent Development Kit (ADK): The framework and tools enabling the development of modular, scalable agents.
+    * **Responsive UI/UX:** A clean, modern interface built with Tailwind CSS ensures optimal viewing and interaction across all devices (desktop, tablet, mobile).
 
-Frontend:
+    * **Robust Error Handling:** Provides user feedback for empty inputs and handles API errors gracefully.
 
-HTML5
+    * **Containerized Microservices:** Backend logic is separated into independent, scalable Cloud Run services (meal-agent, movie-agent), developed using the principles of the ADK.
 
-CSS3 (Tailwind CSS for utility-first styling)
+## Technology Stack
+* **`Google Agent Development Kit (ADK)`:** The framework and tools enabling the development of modular, scalable agents.
+* **Frontend:**
+    * HTML5
+    * CSS3 (Tailwind CSS for utility-first styling)
+    * JavaScript (ES6+)
+    * `Google Fonts` (Inter)
+* **Backend (Microservices):**
+    * Python 3.9+
+    * Flask (Web Framework)
+    * Requests (HTTP library)
+    * `Google Cloud Secret Manager` (for API key security)
+    * `Google Cloud aiplatform` library (for Vertex AI Gemini API)
+* **APIs:**
+    * **`Gemini API (via Vertex AI GenerativeModel`):** Powers mood-to-keyword/genre inference for both meal and movie agents, core to our ADK agents.
+    * **Spoonacular API:** Provides comprehensive meal recipes, images, and details based on food keywords.
+    * **TMDB (The Movie Database) API:** Offers movie discovery, posters, overviews, and detailed metadata (year, runtime, ratings).
+* **Deployment:**
+    * Docker (Containerization)
+    * `Google Cloud Run` (Serverless compute for backend agents, ideal for ADK microservices)
+    * `Google Cloud Project` (overall management)
+* **Version Control:**
+    * Git
+    * GitHub (Public Remote Repository)
 
-JavaScript (ES6+)
+## Architecture
 
-Google Fonts (Inter)
-
-Backend (Microservices):
-
-Python 3.9+
-
-Flask (Web Framework)
-
-Requests (HTTP library)
-
-Google Cloud Secret Manager (for API key security)
-
-Google Cloud aiplatform library (for Vertex AI Gemini API)
-
-APIs:
-
-Gemini API (via Vertex AI GenerativeModel): Powers mood-to-keyword/genre inference for both meal and movie agents, core to our ADK agents.
-
-Spoonacular API: Provides comprehensive meal recipes, images, and details based on food keywords.
-
-TMDB (The Movie Database) API: Offers movie discovery, posters, overviews, and detailed metadata (year, runtime, ratings).
-
-Deployment:
-
-Docker (Containerization)
-
-Google Cloud Run (Serverless compute for backend agents, ideal for ADK microservices)
-
-Google Cloud Project (overall management)
-
-Version Control:
-
-Git
-
-GitHub (Public Remote Repository)
-
-Architecture
 The MoodFusion Recommender follows a client-server architecture with specialized backend microservices, designed with ADK principles:
 
 graph TD
@@ -164,7 +145,8 @@ Returns movie title, poster URL, description, source URL, and detailed info.
 
 The frontend receives responses from both agents and dynamically updates the UI to display the meal and movie recommendations.
 
-Google Agent Development Kit (ADK) Usage
+## Google Agent Development Kit (ADK) Usage
+
 The Google Agent Development Kit (ADK) provided the foundational tools and architectural patterns that significantly streamlined the development of our MoodFusion Recommender.
 
 How ADK was utilized:
@@ -179,7 +161,8 @@ Secure Credential Management: The recommended use of Google Secret Manager withi
 
 Rapid Prototyping & Iteration: The ADK's streamlined approach allowed for rapid development and iterative improvements, enabling us to quickly experiment with prompt engineering and API integrations to achieve precise recommendation quality.
 
-Setup & Deployment
+## Setup & Deployment
+
 Follow these steps to set up and deploy your MoodFusion Recommender.
 
 Prerequisites
@@ -308,7 +291,7 @@ Run Locally (or Deploy to Static Hosting):
 
 Open frontend/index.html directly in your web browser. All interactions will be handled by your deployed Cloud Run agents.
 
-Usage
+## Usage
 Enter your Mood: Type how you're feeling into the text input box (e.g., "happy," "tired," "adventurous").
 
 Use Quick Mood: Alternatively, select a pre-defined mood from the dropdown for rapid recommendation generation.
@@ -321,7 +304,7 @@ Explore Movie Details: View the movie title, poster, and description. Hover over
 
 Switch Themes: Use the "Light" and "Dark" buttons to toggle the application's theme. Your preference will be saved.
 
-Future Enhancements
+## Future Enhancements
 Mobile Application (Flutter): Port the frontend to a native mobile application using Flutter, enabling use on phones and tablets, leveraging the existing backend microservices.
 
 Refined Movie Genre Inference: Further enhance the movie agent's Gemini prompt and/or implement post-processing to completely eliminate animated/kid-focused content for non-child-specific moods, ensuring more precise adult/teenager-oriented recommendations.
@@ -340,7 +323,7 @@ User Feedback Loop: Allow users to rate recommendations, improving future sugges
 
 Custom Modals for Alerts: Replace native alert() with custom UI for better styling.
 
-Challenges & Learnings
+## Challenges & Learnings
 Leveraging the ADK: Understanding how to effectively build, containerize, and deploy modular agents on Cloud Run to achieve scalable and independent services.
 
 Debugging Distributed Systems: Identifying issues across frontend JavaScript, Flask agents, and external APIs required extensive use of browser developer tools (Console, Network tab) and Cloud Run logging.
@@ -355,7 +338,7 @@ DOM Manipulation & Styling: Ensuring JavaScript correctly interacted with dynami
 
 Third-Party API Nuances: Learning how to effectively query Spoonacular (e.g., type parameter) and TMDB (e.g., secondary call for detailed movie data, release_dates for certification) for optimal results.
 
-Attribution
+## Attribution
 Agent Development Kit: Google ADK
 
 Large Language Model: Gemini API (via Google Cloud Vertex AI)
@@ -368,7 +351,7 @@ Styling Framework: Tailwind CSS
 
 Font: Google Fonts - Inter
 
-Contact
+## Contact
 Team Cinemunch
 [Your GitHub Profile Link (Optional)]
 [Your LinkedIn Profile Link (Optional)]
