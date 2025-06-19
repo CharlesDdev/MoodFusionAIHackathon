@@ -386,7 +386,7 @@ Styling Framework: Tailwind CSS
 Font: Google Fonts - Inter
 
 Contact
-[Charles R. DeClouette II / Team Cinemunch]
+Team Cinemunch
 [Your GitHub Profile Link (Optional)]
 [Your LinkedIn Profile Link (Optional)]
 [Your Email (Optional)]
