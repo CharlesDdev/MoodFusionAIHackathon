@@ -59,22 +59,34 @@ def get_meal_recommendation(mood: str, meal_context: str): # MODIFIED: Accepts m
     # --- NEW: Dynamic Gemini Prompt and Spoonacular Type based on meal_context ---
     prompt_meal_type_description = ""
     spoonacular_meal_type_filter = ""
+    gemini_negative_contraints = """
+    **CRITICAL: ABSOLUTELY DO NOT SUGGEST ANY LUNCH, DINNER, DESSERT, OR SWEET SNACK ITEM.** This includes pasta, pizza, steak, chicken stir-fry, curries, stews, casseroles, sandwiches, muffins, cakes, pies, or anything not primarily a savory breakfast/brunch. Focus strictly on categories like eggs, pancakes, waffles, oatmeal, breakfast burritos, breakfast meats, savory toasts."""
     
     # Adjust prompt wording and Spoonacular filter based on context
     if meal_context == "breakfast":
         prompt_meal_type_description = "a delicious **breakfast or brunch** meal"
         spoonacular_meal_type_filter = "breakfast"
+        gemini_negative_constraints = """
+        **CRITICAL: ABSOLUTELY DO NOT SUGGEST ANY LUNCH OR DINNER ITEMS.** This includes pasta, pizza, steak, chicken stir-fry, curries, stews, casseroles, sandwiches, or anything typically eaten for lunch or dinner. Focus strictly on breakfast/brunch categories like eggs, pancakes, waffles, oatmeal, breakfast burritos, breakfast meats.
+        """
     elif meal_context == "lunch":
         prompt_meal_type_description = "a satisfying **lunch** meal"
         spoonacular_meal_type_filter = "lunch" # Specific Spoonacular type for lunch
+        gemini_negative_contraints = """
+        **CRITICAL: ABSOLUTELY DO NOT SUGGEST ANY DESSERT, SWEET SNACK, BREAKFAST, OR HEAVY DINNER ITEMS.** This includes cake, cookies, pies, muffins, pancakes, eggs benedict, roasts, or heavy stews. Focus on lighter, savory lunch options.
+        """
     elif meal_context == "dinner":
         prompt_meal_type_description = "a hearty **dinner** meal"
         spoonacular_meal_type_filter = "main course" # 'main course' is good for dinner
+        gemini_negative_constraints = """
+        **CRITICAL: ABSOLUTELY DO NOT SUGGEST ANY DESSERT, SWEET SNACK, BREAKFAST, OR LIGHT LUNCH ITEMS.** This includes muffins, cakes, pies, pancakes, eggs, salads as a main meal, or light sandwiches. Focus strictly on savory, substantial dinner dishes.
+        """
     else: # Default or 'general' context
         prompt_meal_type_description = "a satisfying **meal (breakfast, lunch, or dinner)**"
-        # For general, allow Spoonacular to search across common meal types for flexibility
         spoonacular_meal_type_filter = "main course,breakfast,lunch,appetizer,salad,soup" # Broader types for general context
-
+        gemini_negative_constraints = """
+        **CRITICAL: ABSOLUTELY DO NOT SUGGEST ANY DESSERTS OR SWEET SNACKS.** This includes muffins, cakes, cookies, pies, tarts, ice cream, or anything sweet-focused.
+        """
     gemini_prompt = f"""
 The user is feeling: "{mood}".
 Your task is to suggest 3-5 distinct food-related keywords that would perfectly match this mood for {prompt_meal_type_description}.
@@ -204,14 +216,14 @@ def recommend_meal():
     try:
         data = request.get_json()
         mood = data.get('mood')
-        meal_context = data.get('mealContext', 'general') # NEW: Get mealContext, default to 'general'
+        meal_context = data.get('mealContext', 'general')
 
         if not mood:
             logger.warning("Missing 'mood' in request body")
             return jsonify({"error": "Missing 'mood' in request body"}), 400
 
         logger.info(f"Received request for mood: {mood}, mealContext: {meal_context} in meal agent")
-        meal_recommendation = get_meal_recommendation(mood, meal_context) # MODIFIED: Pass meal_context
+        meal_recommendation = get_meal_recommendation(mood, meal_context)
         return jsonify(meal_recommendation), 200
 
     except Exception as e:

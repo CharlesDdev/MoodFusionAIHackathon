@@ -3,20 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoodFusion Recommender</title>
+    <title>Cinemunch Recommender</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts - Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        /* Define CSS Variables for Theming */
+        :root {
+            /* Light Theme Default */
+            --primary-bg: #f0f2f5;
+            --secondary-bg: #ffffff;
+            --card-bg: #f9fafb; /* Light gray for cards */
+            --text-primary: #1f2937; /* Dark gray for main text */
+            --text-secondary: #4b5563; /* Medium gray for secondary text */
+            --border-color: #e5e7eb; /* Light border */
+            --input-bg: #ffffff; /* Explicit input background for light mode */
+            --input-border: #d1d5db; /* Light gray-300 for input border */
+            --button-bg: #2563eb; /* Blue-600 */
+            --button-hover-bg: #1d4ed8; /* Blue-700 */
+            --meal-accent-text: #1052b3; /* Darker blue for meal title */
+            --movie-accent-text: #7e22ce; /* Purple-700 */
+            --hover-overlay-bg: rgba(17, 24, 39, 0.6); /* Gray-900 at 60% opacity */
+        }
+
+        /* Dark Theme Overrides */
+        .dark {
+            --primary-bg: #1a202c; /* Dark charcoal (e.g., bg-gray-900) */
+            --secondary-bg: #2d3748; /* Darker gray (e.g., bg-gray-800) */
+            --card-bg: #2d3748; /* Darker gray for cards (e.g., bg-gray-800) */
+            --text-primary: #e2e8f0; /* Light gray for main text (e.g., text-gray-200) */
+            --text-secondary: #a0aec0; /* Medium light gray (e.g., text-gray-400) */
+            --border-color: #4a5568; /* Darker border (e.g., border-gray-600) */
+            --input-bg: #1f2937; /* Even darker for input backgrounds (e.g., bg-gray-800 or 900) */
+            --input-border: #4a5568; /* Darker border for inputs */
+            --button-bg: #6366f1; /* Indigo-500 for dark mode button */
+            --button-hover-bg: #4f46e5; /* Indigo-600 */
+            --meal-accent-text: #6366f1; /* Indigo-500 for meal title in dark mode */
+            --movie-accent-text: #a855f7; /* Purple-500 for movie title in dark mode */
+            --hover-overlay-bg: rgba(0, 0, 0, 0.85); /* Black at 85% opacity for dark mode overlay */
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5; /* Light gray background */
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         /* Custom styles for loading spinner */
         .spinner {
             border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #3498db; /* Blue spinner */
+            border-left-color: var(--button-bg);
             border-radius: 50%;
             width: 24px;
             height: 24px;
@@ -31,95 +68,122 @@
         .description-content p {
             margin-bottom: 0.75rem;
             line-height: 1.6;
-            text-align: left; /* Ensure left align after removing justify */
+            text-align: left;
+            color: var(--text-secondary);
         }
         .description-content b, .description-content strong {
             font-weight: 700;
-            color: #333;
+            color: var(--text-primary);
         }
         .description-content a {
-            color: #2563eb;
+            color: var(--meal-accent-text);
             text-decoration: underline;
             transition: color 0.2s ease-in-out;
         }
         .description-content a:hover {
-            color: #1d4ed8;
+            color: var(--button-hover-bg);
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
-    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-4xl space-y-8">
-        <header class="text-center">
-            <h1 class="text-4xl font-extrabold text-gray-800 mb-2">MoodFusion Recommender</h1>
-            <p class="text-lg text-gray-600">Tell me how you're feeling, and I'll recommend a meal and a movie!</p>
-        </header>
+<body>
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-4xl space-y-8
+                    bg-[var(--secondary-bg)] border border-[var(--border-color)] text-[var(--text-primary)]
+                    transition-colors duration-300">
+            <header class="text-center">
+                <h1 class="text-4xl font-extrabold mb-2">Cinemunch Recommender</h1>
+                <p class="text-lg text-[var(--text-secondary)]">Tell me how you're feeling, and I'll recommend a movie and a munch!</p>
+            </header>
 
-        <section class="flex flex-col md:flex-row items-center justify-center gap-4">
-            <div class="flex-grow w-full md:w-auto space-y-3">
-                <label for="moodInput" class="sr-only">My mood is:</label>
-                <input
-                    type="text"
-                    id="moodInput"
-                    placeholder="My mood is: happy, hungry, tired..."
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg shadow-sm"
+            <!-- Theme Controls Section -->
+            <section class="flex justify-center items-center gap-4 py-4 border-b border-[var(--border-color)]">
+                <!-- Dark Mode Toggle -->
+                <div class="flex items-center gap-2">
+                    <span class="text-[var(--text-secondary)]">Theme:</span>
+                    <button id="lightModeBtn" class="px-4 py-2 rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--text-primary)] hover:bg-[var(--primary-bg)] transition-colors duration-200">Light</button>
+                    <button id="darkModeBtn" class="px-4 py-2 rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--text-primary)] hover:bg-[var(--primary-bg)] transition-colors duration-200">Dark</button>
+                </div>
+            </section>
+
+            <section class="flex flex-col md:flex-row items-center justify-center gap-4">
+                <div class="flex-grow w-full md:w-auto space-y-3">
+                    <label for="moodInput" class="sr-only">My mood is:</label>
+                    <input
+                        type="text"
+                        id="moodInput"
+                        placeholder="My mood is: happy, hungry, tired..."
+                        class="w-full p-3 rounded-lg shadow-sm
+                               border border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--text-primary)]
+                               focus:ring-2 focus:ring-[var(--button-bg)] focus:border-transparent
+                               transition-colors duration-300"
+                    >
+                    <label for="quickMoodSelect" class="sr-only">Or pick a quick mood:</label>
+                    <select id="quickMoodSelect" class="w-full p-3 rounded-lg shadow-sm
+                                     border border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--text-primary)]
+                                     focus:ring-2 focus:ring-[var(--button-bg)] focus:border-transparent
+                                     transition-colors duration-300">
+                        <option value="">-- Or pick a quick mood --</option>
+                        <option value="happy">Happy</option>
+                        <option value="calm">Calm</option>
+                        <option value="energetic">Energetic</option>
+                        <option value="adventurous">Adventurous</option>
+                        <option value="cozy">Cozy</option>
+                        <option value="romantic">Romantic</option>
+                        <option value="tired">Tired</option>
+                        <option value="hungry">Hungry</option>
+                        <option value="stressed">Stressed</option>
+                    </select>
+                </div>
+                <button
+                    id="getRecommendationsBtn"
+                    class="w-full md:w-auto font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center gap-2
+                           bg-[var(--button-bg)] text-white hover:bg-[var(--button-hover-bg)]"
+                    title="Click to get new recommendations, or change your mood!"
                 >
-                <label for="quickMoodSelect" class="sr-only">Or pick a quick mood:</label>
-                <select id="quickMoodSelect" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg shadow-sm bg-white">
-                    <option value="">-- Or pick a quick mood --</option>
-                    <option value="happy">Happy</option>
-                    <option value="calm">Calm</option>
-                    <option value="energetic">Energetic</option>
-                    <option value="adventurous">Adventurous</option>
-                    <option value="cozy">Cozy</option>
-                    <option value="romantic">Romantic</option>
-                    <option value="tired">Tired</option>
-                    <option value="hungry">Hungry</option>
-                    <option value="stressed">Stressed</option>
-                </select>
-            </div>
-            <button
-                id="getRecommendationsBtn"
-                class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center gap-2"
-                title="Click to get new recommendations, or change your mood!"
-            >
-                <span id="buttonText">Get Recommendations</span>
-                <div id="loadingSpinner" class="spinner hidden"></div>
-            </button>
-        </section>
+                    <span id="buttonText">Get Recommendations</span>
+                    <div id="loadingSpinner" class="spinner hidden"></div>
+                </button>
+            </section>
 
-        <main class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-            <!-- Meal Recommendation Card -->
-            <div id="mealResultDiv" class="recommendation-card bg-gray-50 p-6 rounded-xl shadow-lg border border-gray-200 hidden transition duration-300 ease-in-out transform hover:scale-[1.01]">
-                <h2 class="text-2xl font-bold text-blue-700 mb-4 text-center">Meal Recommendation</h2>
-                <div class="text-center mb-4">
-                    <h3 id="mealTitle" class="text-xl font-semibold text-gray-800 mb-2"></h3>
-                    <img id="mealImage" src="" alt="Meal Image" class="w-full h-auto rounded-lg shadow-md mx-auto mb-4 object-cover max-h-60">
-                </div>
-                <p id="mealDescription" class="text-gray-700 leading-relaxed mb-4 description-content"></p>
-                <a id="mealSourceUrl" href="#" target="_blank" class="block text-blue-600 hover:text-blue-800 font-medium text-center transition duration-200">View Full Recipe</a>
-            </div>
-
-            <!-- Movie Recommendation Card -->
-            <div id="movieResultDiv" class="recommendation-card bg-gray-50 p-6 rounded-xl shadow-lg border border-gray-200 hidden transition duration-300 ease-in-out transform hover:scale-[1.01] relative overflow-hidden group">
-                <h2 class="text-2xl font-bold text-purple-700 mb-4 text-center">Movie Recommendation</h2>
-                <div class="text-center mb-4">
-                    <h3 id="movieTitle" class="text-xl font-semibold text-gray-800 mb-2"></h3>
-                    <img id="movieImage" src="" alt="Movie Poster" class="w-full h-auto rounded-lg shadow-md mx-auto mb-4 object-cover max-h-60">
-                </div>
-                
-                <!-- NEW: Movie Details Overlay - Initially hidden, appears on hover -->
-                <div class="absolute inset-0 bg-gray-900 bg-opacity-60 rounded-xl flex flex-col items-center justify-center p-4 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <p class="text-xl font-bold text-center mb-2" id="hoverMovieTitle"></p>
-                    <p class="text-md text-center mb-1" id="hoverMovieYear"></p>
-                    <p class="text-md text-center mb-1" id="hoverMovieRuntime"></p>
-                    <p class="text-md text-center mb-1" id="hoverMovieRating"></p>
-                    <p class="text-md text-center" id="hoverMovieVoteAverage"></p>
+            <main class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                <!-- Meal Recommendation Card -->
+                <div id="mealResultDiv" class="recommendation-card p-6 rounded-xl shadow-lg border hidden transition duration-300 ease-in-out transform hover:scale-[1.01]
+                            bg-[var(--card-bg)] border-[var(--border-color)] text-[var(--text-primary)]">
+                    <h2 class="text-2xl font-bold mb-4 text-center text-[var(--meal-accent-text)]">Meal Recommendation</h2>
+                    <div class="text-center mb-4">
+                        <h3 id="mealTitle" class="text-xl font-semibold mb-2"></h3>
+                        <img id="mealImage" src="" alt="Meal Image" class="w-full h-auto rounded-lg shadow-md mx-auto mb-4 object-cover max-h-60">
+                    </div>
+                    <p id="mealDescription" class="leading-relaxed mb-4 description-content"></p>
+                    <a id="mealSourceUrl" href="#" target="_blank" class="block font-medium text-center transition duration-200
+                                    text-[var(--meal-accent-text)] hover:text-[var(--button-hover-bg)]">View Full Recipe</a>
                 </div>
 
-                <p id="movieDescription" class="text-gray-700 leading-relaxed mb-4 description-content"></p>
-                <a id="movieSourceUrl" href="#" target="_blank" class="block text-purple-600 hover:text-purple-800 font-medium text-center transition duration-200">View on TMDB</a>
-            </div>
-        </main>
+                <!-- Movie Recommendation Card -->
+                <div id="movieResultDiv" class="recommendation-card p-6 rounded-xl shadow-lg border hidden transition duration-300 ease-in-out transform hover:scale-[1.01] relative overflow-hidden group
+                            bg-[var(--card-bg)] border-[var(--border-color)] text-[var(--text-primary)]">
+                    <h2 class="text-2xl font-bold mb-4 text-center text-[var(--movie-accent-text)]">Movie Recommendation</h2>
+                    <div class="text-center mb-4">
+                        <h3 id="movieTitle" class="text-xl font-semibold mb-2"></h3>
+                        <img id="movieImage" src="" alt="Movie Poster" class="w-full h-auto rounded-lg shadow-md mx-auto mb-4 object-cover max-h-60">
+                    </div>
+                    
+                    <!-- Movie Details Overlay - Initially hidden, appears on hover -->
+                    <div class="absolute inset-0 rounded-xl flex flex-col items-center justify-center p-4 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100
+                                bg-[var(--hover-overlay-bg)]">
+                        <p class="text-xl font-bold text-center mb-2" id="hoverMovieTitle"></p>
+                        <p class="text-md text-center mb-1" id="hoverMovieYear"></p>
+                        <p class="text-md text-center mb-1" id="hoverMovieRuntime"></p>
+                        <p class="text-md text-center mb-1" id="hoverMovieRating"></p>
+                        <p class="text-md text-center" id="hoverMovieVoteAverage"></p>
+                    </div>
+
+                    <p id="movieDescription" class="leading-relaxed mb-4 description-content"></p>
+                    <a id="movieSourceUrl" href="#" target="_blank" class="block font-medium text-center transition duration-200
+                                    text-[var(--movie-accent-text)] hover:text-[var(--button-hover-bg)]">View on TMDB</a>
+                </div>
+            </main>
+        </div>
     </div>
 
     <!-- Your existing script.js will be linked here -->

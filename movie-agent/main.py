@@ -82,17 +82,24 @@ def get_movie_recommendation(mood: str):
     # --- Step 1: Use Gemini to infer TMDB genre names from the mood ---
     available_genres = list(TMDB_GENRES.keys())
     gemini_prompt = f"""
-    The user is feeling: "{mood}".
-    Suggest 3-5 distinct TMDB movie genre names that would perfectly match this mood.
-    Do not suggest specific movies, actors, or genre IDs.
-    Choose ONLY from the following common TMDB genres: {', '.join(sorted(available_genres))}.
-    If a mood doesn't directly map to a genre, pick the closest fitting ones.
-    Examples:
-    - If mood is "sad", genres could be "Drama", "Family", "Music".
-    - If mood is "adventurous", genres could be "Action", "Adventure", "Fantasy".
-    - If mood is "cozy and thoughtful", genres could be "Drama", "Family", "Comedy", "Romance", "Animation".
-    Return the genre names as a comma-separated list.
-    """
+The user is feeling: "{mood}".
+Suggest 3-5 distinct TMDB movie genre names that would perfectly match this mood.
+Do not suggest specific movies, actors, or genre IDs.
+Choose ONLY from the following common TMDB genres: {', '.join(sorted(available_genres))}.
+If a mood doesn't directly map to a genre, pick the closest fitting ones.
+
+**CRITICAL: ABSOLUTELY DO NOT SUGGEST** "Animation", "Family", or "Kids" genres unless the mood *explicitly* and *strongly* suggests content for children (e.g., mood is "childlike fun", "for kids"). For general moods, assume adult/teenager preferences.
+
+Examples:
+- If mood is "sad", genres could be "Drama", "Music", "Romance".
+- If mood is "adventurous", genres could be "Action", "Adventure", "Fantasy", "Science Fiction".
+- If mood is "cozy and thoughtful", genres could be "Drama", "Romance", "Comedy".
+- If mood is "romantic", genres could be "Romance", "Drama", "Comedy", "Thriller".
+- If mood is "energetic", genres could be "Action", "Adventure", "Thriller", "Science Fiction", "Comedy".
+- If mood is "tired", genres could be "Drama", "Comedy", "Documentary".
+
+Return the genre names as a comma-separated list.
+"""
     inferred_genre_names = ""
     genre_ids = []
     try:
@@ -242,10 +249,10 @@ def get_movie_recommendation(mood: str):
         "moviePosterUrl": movie_poster_url,
         "movieDescription": movie_description,
         "movieSourceUrl": movie_source_url,
-        "movieYear": release_year,        # NEW
-        "movieRuntime": runtime,          # NEW
-        "movieRating": certification,     # NEW (MPAA rating)
-        "movieVoteAverage": vote_average  # NEW (TMDB user score)
+        "movieYear": release_year,        
+        "movieRuntime": runtime,          
+        "movieRating": certification,     
+        "movieVoteAverage": vote_average  
     }
 
 # --- Flask Route ---

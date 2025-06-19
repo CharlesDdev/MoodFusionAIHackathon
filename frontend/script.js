@@ -2,19 +2,14 @@
 const MEAL_AGENT_URL = 'https://meal-agent-702694291445.us-central1.run.app/recommend_meal';
 const MOVIE_AGENT_URL = 'https://movie-agent-702694291445.us-central1.run.app/recommend_movie';
 
-const hoverMovieTitleElem = document.getElementById('hoverMovieTitle');
-const hoverMovieYearElem = document.getElementById('hoverMovieYear');
-const hoverMovieRuntimeElem = document.getElementById('hoverMovieRuntime');
-const hoverMovieRatingElem = document.getElementById('hoverMovieRating');
-const hoverMovieVoteAverageElem = document.getElementById('hoverMovieVoteAverage');// Ensure all DOM-dependent code runs after the DOM is fully loaded
-
+// Ensure all DOM-dependent code runs after the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     // --- Element References ---
     const moodInput = document.getElementById('moodInput');
     const getRecommendationsBtn = document.getElementById('getRecommendationsBtn');
     const loadingSpinner = document.getElementById('loadingSpinner');
     const buttonText = document.getElementById('buttonText');
-    const quickMoodSelect = document.getElementById('quickMoodSelect'); // NEW: Reference to the dropdown
+    const quickMoodSelect = document.getElementById('quickMoodSelect');
     
     const mealResultDiv = document.getElementById('mealResultDiv');
     const mealTitleElem = document.getElementById('mealTitle');
@@ -28,6 +23,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const movieDescriptionElem = document.getElementById('movieDescription');
     const movieSourceUrlElem = document.getElementById('movieSourceUrl');
 
+    const hoverMovieTitleElem = document.getElementById('hoverMovieTitle');
+    const hoverMovieYearElem = document.getElementById('hoverMovieYear');
+    const hoverMovieRuntimeElem = document.getElementById('hoverMovieRuntime');
+    const hoverMovieRatingElem = document.getElementById('hoverMovieRating');
+    const hoverMovieVoteAverageElem = document.getElementById('hoverMovieVoteAverage');
+
+    // NEW: Theme related element references
+    const lightModeBtn = document.getElementById('lightModeBtn');
+    const darkModeBtn = document.getElementById('darkModeBtn');
+    const body = document.body; // Reference to the body element
+
+    // --- Theme Logic ---
+    // Function to set the theme
+    function setTheme(theme) {
+        if (theme === 'dark') {
+            body.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            body.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        }
+        updateThemeButtons(theme);
+    }
+
+    // Function to update the active theme button styles
+    function updateThemeButtons(currentTheme) {
+        if (currentTheme === 'dark') {
+            darkModeBtn.classList.add('bg-gray-700', 'text-white');
+            lightModeBtn.classList.remove('bg-gray-700', 'text-white');
+        } else {
+            lightModeBtn.classList.add('bg-gray-700', 'text-white');
+            darkModeBtn.classList.remove('bg-gray-700', 'text-white');
+        }
+    }
+
+    // Apply saved theme on load, or default to light, or system preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        setTheme(savedTheme);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // Check for system dark mode preference
+        setTheme('dark');
+    } else {
+        setTheme('light'); // Default to light if no preference
+    }
+
+    // Event listeners for theme buttons
+    lightModeBtn.addEventListener('click', () => setTheme('light'));
+    darkModeBtn.addEventListener('click', () => setTheme('dark'));
+
     // --- Event Listener for the Main Button ---
     getRecommendationsBtn.addEventListener('click', async () => {
         const mood = moodInput.value.trim();
@@ -40,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
         showLoading();
 
         const mealContext = getMealContext();
-        console.log("Determined meal context:", mealContext);
 
         try {
             const [mealResponse, movieResponse] = await Promise.allSettled([
@@ -71,30 +115,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- NEW: Event Listener for the Quick Mood Select Dropdown ---
+    // --- Event Listener for the Quick Mood Select Dropdown ---
     quickMoodSelect.addEventListener('change', () => {
         const selectedMood = quickMoodSelect.value;
-        if (selectedMood) { // Only if a valid mood is selected (not the default option)
-            moodInput.value = selectedMood; // Update the text input with the selected mood
-            getRecommendationsBtn.click(); // Programmatically click the main button
+        if (selectedMood) {
+            moodInput.value = selectedMood;
+            getRecommendationsBtn.click();
         }
-        quickMoodSelect.value = ""; // Reset dropdown to default option after selection
+        quickMoodSelect.value = "";
     });
 
     // --- Helper Functions ---
 
     function getMealContext() {
         const now = new Date();
-        const hour = now.getHours(); // 0-23
+        const hour = now.getHours();
 
-        if (hour >= 5 && hour < 11) { // 5 AM to 10:59 AM
+        if (hour >= 5 && hour < 11) {
             return "breakfast";
-        } else if (hour >= 11 && hour < 15) { // 11 AM to 2:59 PM
+        } else if (hour >= 11 && hour < 15) {
             return "lunch";
-        } else if (hour >= 15 && hour < 21) { // 3 PM to 8:59 PM
+        } else if (hour >= 15 && hour < 21) {
             return "dinner";
         } else {
-            return "general"; // For late night, early morning, or unspecified
+            return "general";
         }
     }
 
@@ -132,26 +176,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayMovieRecommendation(data) {
-    if (data.movieTitle) {
-        movieTitleElem.textContent = data.movieTitle;
-        movieImageElem.src = data.moviePosterUrl;
-        movieImageElem.alt = data.movieTitle;
+        if (data.movieTitle) {
+            movieTitleElem.textContent = data.movieTitle;
+            movieImageElem.src = data.moviePosterUrl;
+            movieImageElem.alt = data.movieTitle;
 
-        // NEW: Populate hover details
-        hoverMovieTitleElem.textContent = data.movieTitle; // Title for hover overlay
-        hoverMovieYearElem.textContent = `Year: ${data.movieYear || 'N/A'}`;
-        hoverMovieRuntimeElem.textContent = `Runtime: ${data.movieRuntime || 'N/A'}`;
-        hoverMovieRatingElem.textContent = `Rating: ${data.movieRating || 'N/A'}`; // MPAA rating
-        hoverMovieVoteAverageElem.textContent = `TMDB Score: ${data.movieVoteAverage || 'N/A'}`; // TMDB 0-10 score
+            hoverMovieTitleElem.textContent = data.movieTitle;
+            hoverMovieYearElem.textContent = `Year: ${data.movieYear || 'N/A'}`;
+            hoverMovieRuntimeElem.textContent = `Runtime: ${data.movieRuntime || 'N/A'}`;
+            hoverMovieRatingElem.textContent = `Rating: ${data.movieRating || 'N/A'}`;
+            hoverMovieVoteAverageElem.textContent = `TMDB Score: ${data.movieVoteAverage || 'N/A'}`;
 
-        movieDescriptionElem.textContent = data.movieDescription || 'No description available.';
-        movieSourceUrlElem.href = data.movieSourceUrl || '#';
-        movieResultDiv.classList.remove('hidden');
-    } else {
-        console.warn('Movie data is incomplete or invalid:', data);
-        movieResultDiv.classList.add('hidden');
+            movieDescriptionElem.textContent = data.movieDescription || 'No description available.';
+            movieSourceUrlElem.href = data.movieSourceUrl || '#';
+            movieResultDiv.classList.remove('hidden');
+        } else {
+            console.warn('Movie data is incomplete or invalid:', data);
+            movieResultDiv.classList.add('hidden');
+        }
     }
-}
 
     function showLoading() {
         loadingSpinner.classList.remove('hidden');

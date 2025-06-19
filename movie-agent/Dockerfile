@@ -7,14 +7,14 @@ ENV PYTHONUNBUFFERED True
 
 # Copy local code to the container image.
 # Forcing copy rebuild for syntax error fix - try CACHE_BREAKER=9 if 8 fails for copy.
-ARG CACHE_BREAKER_COPY=123
+ARG CACHE_BREAKER_COPY=124
 RUN echo "Cache buster for COPY: ${CACHE_BREAKER_COPY}"
 
 WORKDIR /app
 COPY . /app 
 
 # Install production dependencies.
-ARG CACHE_BREAKER=43
+ARG CACHE_BREAKER=44
 # RUN pip install google-generativeai
 RUN pip install -r requirements.txt
 
