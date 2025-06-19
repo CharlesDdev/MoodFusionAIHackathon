@@ -1,4 +1,6 @@
-# Cinemunch - Meal and Movie Recommender
+# Cinemunch 
+# Meal and Movie Recommender
+
 ## Find Your Perfect Vibe: Curated Meals & Movies for Every Mood!
 
 ## Table of Contents
