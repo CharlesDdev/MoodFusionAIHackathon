@@ -255,18 +255,18 @@ cd ..
 
 **Frontend Setup**
 
- **Update** frontend/script.js:
+ **Update** `frontend/script.js`:
 
-    Open frontend/script.js.
+  * Open `frontend/script.js`.
 
-    Replace https://meal-agent-702694291445.us-central1.run.app/recommend_meal with your actual MEAL_AGENT_URL.
+  * Replace `https://meal-agent-702694291445.us-central1.run.app/recommend_meal with your actual MEAL_AGENT_URL`.
 
-    * Replace https://movie-agent-702694291445.us-central1.run.app/recommend_movie with your actual MOVIE_AGENT_URL.
+  * Replace `https://movie-agent-702694291445.us-central1.run.app/recommend_movie with your actual MOVIE_AGENT_URL`.
 
-    * Save frontend/script.js.
+  * Save `frontend/script.js`.
 
 **Run Locally (or Deploy to Static Hosting):**
-Open frontend/index.html directly in your web browser. All interactions will be handled by your deployed Cloud Run agents.
+Open `frontend/index.html` directly in your web browser. All interactions will be handled by your deployed Cloud Run agents.
 
 ## Usage
 1. **Enter your Mood:** Type how you're feeling into the text input box (e.g., "happy," "tired," "adventurous").
@@ -292,22 +292,22 @@ Open frontend/index.html directly in your web browser. All interactions will be 
 * **Refined Filtering:** Add more explicit filters (e.g., "vegetarian meal," "action movie only").
 * **Advanced Mood Analysis:** Utilize more sophisticated NLP for deeper mood understanding.
 * **User Feedback Loop:** Allow users to rate recommendations, improving future suggestions.
-* **Custom Modals for Alerts:** Replace native alert() with custom UI for better styling.
+* **Custom Modals for Alerts:** Replace native `alert()` with custom UI for better styling.
 
 ## Challenges & Learnings
 * **Leveraging the ADK:** Understanding how to effectively build, containerize, and deploy modular agents on Cloud Run to achieve scalable and independent services.
 
 * **Debugging Distributed Systems:** Identifying issues across frontend JavaScript, Flask agents, and external APIs required extensive use of browser developer tools (Console, Network tab) and Cloud Run logging.
 
-* **Docker Caching:** Overcoming issues where Dockerfile changes weren't picked up required implementing explicit cache-busting mechanisms (ARG CACHE_BREAKER_COPY).
+* **Docker Caching:** Overcoming issues where `Dockerfile` changes weren't picked up required implementing explicit cache-busting mechanisms (`ARG CACHE_BREAKER_COPY`).
 
-* **Frontend-Backend Data Mismatch:** Resolving subtle mismatches in JSON key names (movieImageUrl vs moviePosterUrl) was crucial for displaying content correctly.
+* **Frontend-Backend Data Mismatch:** Resolving subtle mismatches in JSON key names (`movieImageUrl` vs `moviePosterUrl`) was crucial for displaying content correctly.
 
 * **Prompt Engineering for Specificity:** Iteratively refining Gemini prompts with strong positive and negative constraints was key to achieving desired meal types (e.g., preventing desserts) and movie genres (e.g., reducing animated bias).
 
-* **DOM Manipulation & Styling:** Ensuring JavaScript correctly interacted with dynamically styled HTML elements (especially with CSS variables for theming) required careful sequencing with DOMContentLoaded.
+* **DOM Manipulation & Styling:** Ensuring JavaScript correctly interacted with dynamically styled HTML elements (especially with CSS variables for theming) required careful sequencing with `DOMContentLoaded`.
 
-* **Third-Party API Nuances:** Learning how to effectively query Spoonacular (e.g., type parameter) and TMDB (e.g., secondary call for detailed movie data, release_dates for certification) for optimal results.
+* **Third-Party API Nuances:** Learning how to effectively query Spoonacular (e.g., `type` parameter) and TMDB (e.g., secondary call for detailed movie data, `release_dates` for certification) for optimal results.
 
 ## Attribution
 * **Agent Development Kit:** Google ADK
