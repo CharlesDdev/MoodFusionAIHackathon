@@ -2,7 +2,6 @@
 ## Find Your Perfect Vibe: Curated Meals & Movies for Every Mood!
 
 ## Table of Contents
-
 - [Cinemunch - Meal and Movie Recommender](#cinemunch---meal-and-movie-recommender)
   - [Find Your Perfect Vibe: Curated Meals \& Movies for Every Mood!](#find-your-perfect-vibe-curated-meals--movies-for-every-mood)
   - [Table of Contents](#table-of-contents)
