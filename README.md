@@ -156,11 +156,9 @@ Follow these steps to set up and deploy your MoodFusion Recommender.
 
     * Create a new Google Cloud Project or use an existing one.
     * Enable the following APIs:
-
         * Cloud Run API
         * Secret Manager API
         * Vertex AI API
-
     * Set up billing for the project.
 
 2. **`Google Cloud SDK`:** Install and initialize the `gcloud` CLI tool on your local machine.
@@ -198,26 +196,26 @@ Follow these steps to set up and deploy your MoodFusion Recommender.
     --member="serviceAccount:[YOUR_PROJECT_NUMBER]-compute@developer.gserviceaccount.com" \
     --role="roles/secretmanager.secretAccessor" --project=[YOUR_PROJECT_ID]```
 
-    * (Replace [YOUR_PROJECT_NUMBER] with your actual Google Cloud Project Number, found in your GCP console dashboard).
+* (Replace [YOUR_PROJECT_NUMBER] with your actual Google Cloud Project Number, found in your GCP console dashboard).
 
 **Agent Deployment (Backend)**
 Navigate to your project's root directory in your terminal.
 1. **Deploy the** meal-agent:
 * Navigate to the meal-agent directory:
 
-cd meal-agent
+    cd meal-agent
 
 * Build the Docker image:
 
-docker build --platform linux/amd64 -t gcr.io/[YOUR_PROJECT_ID]/meal-agent:latest .
+    docker build --platform linux/amd64 -t gcr.io/[YOUR_PROJECT_ID]/meal-agent:latest .
 
 * Push the image to Google Container Registry:
 
-docker push gcr.io/[YOUR_PROJECT_ID]/meal-agent:latest
+    docker push gcr.io/[YOUR_PROJECT_ID]/meal-agent:latest
 
 * Deploy to Cloud Run:
 
-gcloud run deploy meal-agent --image gcr.io/[YOUR_PROJECT_ID]/meal-agent:latest \
+    gcloud run deploy meal-agent --image gcr.io/[YOUR_PROJECT_ID]/meal-agent:latest \
     --platform managed --region us-central1 --allow-unauthenticated \
     --set-env-vars GCP_PROJECT_ID=[YOUR_PROJECT_ID]
 
@@ -225,31 +223,31 @@ gcloud run deploy meal-agent --image gcr.io/[YOUR_PROJECT_ID]/meal-agent:latest 
 
 * Navigate back to the project root:
 
-cd ..
+    cd ..
 
 2. **Deploy the** movie-agent:
 
-Navigate to the movie-agent directory:
+* Navigate to the movie-agent directory:
 
-cd movie-agent
+    cd movie-agent
 
-Build the Docker image:
+* Build the Docker image:
 
-docker build --platform linux/amd64 -t gcr.io/[YOUR_PROJECT_ID]/movie-agent:latest .
+    docker build --platform linux/amd64 -t gcr.io/[YOUR_PROJECT_ID]/movie-agent:latest .
 
-Push the image to Google Container Registry:
+* Push the image to Google Container Registry:
 
-docker push gcr.io/[YOUR_PROJECT_ID]/movie-agent:latest
+    docker push gcr.io/[YOUR_PROJECT_ID]/movie-agent:latest
 
-Deploy to Cloud Run:
+* Deploy to Cloud Run:
 
-gcloud run deploy movie-agent --image gcr.io/[YOUR_PROJECT_ID]/movie-agent:latest \
+    gcloud run deploy movie-agent --image gcr.io/[YOUR_PROJECT_ID]/movie-agent:latest \
     --platform managed --region us-central1 --allow-unauthenticated \
     --set-env-vars GCP_PROJECT_ID=[YOUR_PROJECT_ID]
 
 * **IMPORTANT:** Note down the URL provided after successful deployment. This will be your MOVIE_AGENT_URL.
 
-Navigate back to the project root:
+* Navigate back to the project root:
 
     cd ..
 
@@ -324,6 +322,3 @@ Open `frontend/index.html` directly in your web browser. All interactions will b
 
 ## Contact
 Team Cinemunch
-[Your GitHub Profile Link (Optional)]
-[Your LinkedIn Profile Link (Optional)]
-[Your Email (Optional)]
