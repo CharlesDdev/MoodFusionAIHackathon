@@ -254,6 +254,7 @@ Navigate back to the project root:
 cd ..
 
 **Frontend Setup**
+
     **Update** frontend/script.js:
 
     Open frontend/script.js.
