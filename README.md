@@ -223,13 +223,13 @@ Navigate to your project's root directory in your terminal.
 
 * Navigate back to the project root:
 
-    cd ..
+        cd ..
 
 2. **Deploy the** movie-agent:
 
 * Navigate to the movie-agent directory:
 
-    cd movie-agent
+        cd movie-agent
 
 * Build the Docker image:
 
