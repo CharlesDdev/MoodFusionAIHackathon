@@ -24,7 +24,7 @@
   
     * [Google Cloud Setup](#google-cloud-setup)
   
-    * [Agent Deployment (Backend)](#agent-deployment-(backend))
+    * [Agent Deployment(Backend)](#agent-deployment-(backend))
   
     * [Frontend Setup](#frontend-setup)
   
