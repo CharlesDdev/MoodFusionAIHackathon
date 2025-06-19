@@ -251,7 +251,7 @@ gcloud run deploy movie-agent --image gcr.io/[YOUR_PROJECT_ID]/movie-agent:lates
 
 Navigate back to the project root:
 
-cd ..
+    cd ..
 
 **Frontend Setup**
 
