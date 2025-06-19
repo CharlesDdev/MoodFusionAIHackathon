@@ -199,6 +199,7 @@ Follow these steps to set up and deploy your MoodFusion Recommender.
 * (Replace [YOUR_PROJECT_NUMBER] with your actual Google Cloud Project Number, found in your GCP console dashboard).
 
 **Agent Deployment (Backend)**
+
 Navigate to your project's root directory in your terminal.
 1. **Deploy the** meal-agent:
 * Navigate to the meal-agent directory:
@@ -249,7 +250,7 @@ Navigate to your project's root directory in your terminal.
 
 * Navigate back to the project root:
 
-    cd ..
+        cd ..
 
 **Frontend Setup**
 
@@ -264,7 +265,8 @@ Navigate to your project's root directory in your terminal.
   * Save `frontend/script.js`.
 
 **Run Locally (or Deploy to Static Hosting):**
-Open `frontend/index.html` directly in your web browser. All interactions will be handled by your deployed Cloud Run agents.
+
+* Open `frontend/index.html` directly in your web browser. All interactions will be handled by your deployed Cloud Run agents.
 
 ## Usage
 1. **Enter your Mood:** Type how you're feeling into the text input box (e.g., "happy," "tired," "adventurous").
