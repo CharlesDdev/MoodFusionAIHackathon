@@ -1,0 +1,8 @@
+flask
+requests
+google-cloud-secret-manager
+google-cloud-aiplatform>=1.39.0
+python-dotenv
+gunicorn
+vertexai
+Flask-CORS

@@ -1,0 +1,5 @@
+Flask
+requests
+google-cloud-secret-manager
+google-cloud-aiplatform
+Flask-CORS
