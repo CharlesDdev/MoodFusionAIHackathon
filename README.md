@@ -255,7 +255,7 @@ cd ..
 
 **Frontend Setup**
 
-    **Update** frontend/script.js:
+ **Update** frontend/script.js:
 
     Open frontend/script.js.
 
