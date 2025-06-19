@@ -181,19 +181,22 @@ Follow these steps to set up and deploy your MoodFusion Recommender.
 **Google Cloud Setup**
 1. **Create Secrets in Secret Manager:**
     * Store your Spoonacular API key:
-```zsh
-echo "YOUR_SPOONACULAR_API_KEY" | gcloud secrets create spoonacular_api_key --data-file=- --project=[YOUR_PROJECT_ID]```
+  
+echo "YOUR_SPOONACULAR_API_KEY" | gcloud secrets create spoonacular_api_key --data-file=- --project=[YOUR_PROJECT_ID]
+
     * Store your TMDB API key:
-```zsh
-echo "YOUR_TMDB_API_KEY" | gcloud secrets create tmdb_api_key --data-file=- --project=[YOUR_PROJECT_ID]```
+  
+echo "YOUR_TMDB_API_KEY" | gcloud secrets create tmdb_api_key --data-file=- --project=[YOUR_PROJECT_ID]
+
     * Grant your Cloud Run service accounts access to these secrets. For each secret:
+  
 gcloud secrets add-iam-policy-binding spoonacular_api_key \
     --member="serviceAccount:[YOUR_PROJECT_NUMBER]-compute@developer.gserviceaccount.com" \
     --role="roles/secretmanager.secretAccessor" --project=[YOUR_PROJECT_ID]
 
 gcloud secrets add-iam-policy-binding tmdb_api_key \
     --member="serviceAccount:[YOUR_PROJECT_NUMBER]-compute@developer.gserviceaccount.com" \
-    --role="roles/secretmanager.secretAccessor" --project=[YOUR_PROJECT_ID]
+    --role="roles/secretmanager.secretAccessor" --project=[YOUR_PROJECT_ID]```
 
 (Replace [YOUR_PROJECT_NUMBER] with your actual Google Cloud Project Number, found in your GCP console dashboard).
 
