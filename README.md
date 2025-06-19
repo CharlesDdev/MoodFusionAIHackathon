@@ -36,25 +36,25 @@ Cinemunch's Meal & Movie Recommender is an intelligent web application built usi
 
 ## Key Features
 
-    * **Mood-Based Recommendations:** Get personalized meal and movie suggestions by simply typing or selecting your current mood (e.g., "happy," "cozy," "adventurous").
+* **Mood-Based Recommendations:** Get personalized meal and movie suggestions by simply typing or selecting your current mood (e.g., "happy," "cozy," "adventurous").
 
-    * **Time-of-Day Aware Meals:** The meal agent intelligently detects the time of day (morning, midday, evening) and tailors meal recommendations accordingly (Breakfast, Lunch, or Dinner).
+* **Time-of-Day Aware Meals:** The meal agent intelligently detects the time of day (morning, midday, evening) and tailors meal recommendations accordingly (Breakfast, Lunch, or Dinner).
 
-    * **Intelligent Meal Filtering:** Robustly excludes desserts, sweet snacks, and inappropriate meal types (e.g., no muffins for dinner!).
+* **Intelligent Meal Filtering:** Robustly excludes desserts, sweet snacks, and inappropriate meal types (e.g., no muffins for dinner!).
 
-    * **Diverse Movie Selections:** The movie agent's recommendations are now highly diversified, avoiding excessive animated/kid-like films for adult-oriented moods, and providing a wider range of genres.
+* **Diverse Movie Selections:** The movie agent's recommendations are now highly diversified, avoiding excessive animated/kid-like films for adult-oriented moods, and providing a wider range of genres.
 
-    * **Interactive Movie Details (Hover Effect):** Hover over a movie card to instantly reveal key details like release year, runtime, MPAA rating, and TMDB user score, enhancing usability.
+* **Interactive Movie Details (Hover Effect):** Hover over a movie card to instantly reveal key details like release year, runtime, MPAA rating, and TMDB user score, enhancing usability.
 
-    * **Quick Mood Dropdown:** A convenient dropdown with pre-defined moods allows for rapid recommendation generation without typing.
+* **Quick Mood Dropdown:** A convenient dropdown with pre-defined moods allows for rapid recommendation generation without typing.
 
-    * **Dynamic Dark Mode:** Toggle between light and dark themes with a click, and the application remembers your preference across sessions using localStorage.
+* **Dynamic Dark Mode:** Toggle between light and dark themes with a click, and the application remembers your preference across sessions using localStorage.
 
-    * **Responsive UI/UX:** A clean, modern interface built with Tailwind CSS ensures optimal viewing and interaction across all devices (desktop, tablet, mobile).
+* **Responsive UI/UX:** A clean, modern interface built with Tailwind CSS ensures optimal viewing and interaction across all devices (desktop, tablet, mobile).
 
-    * **Robust Error Handling:** Provides user feedback for empty inputs and handles API errors gracefully.
+* **Robust Error Handling:** Provides user feedback for empty inputs and handles API errors gracefully.
 
-    * **Containerized Microservices:** Backend logic is separated into independent, scalable Cloud Run services (meal-agent, movie-agent), developed using the principles of the ADK.
+* **Containerized Microservices:** Backend logic is separated into independent, scalable Cloud Run services (meal-agent, movie-agent), developed using the principles of the ADK.
 
 ## Technology Stack
 * **`Google Agent Development Kit (ADK)`:** The framework and tools enabling the development of modular, scalable agents.
@@ -82,35 +82,34 @@ Cinemunch's Meal & Movie Recommender is an intelligent web application built usi
     * GitHub (Public Remote Repository)
 
 ## Architecture
-
 The MoodFusion Recommender follows a client-server architecture with specialized backend microservices, designed with ADK principles:
 
-graph TD
-    UserBrowser[User Browser (Frontend)] -->|HTTP Request| MoodFusionApp[MoodFusion Frontend (index.html, script.js)]
-    MoodFusionApp -->|POST /recommend_meal {mood, mealContext}| MealAgent[Meal Agent (Cloud Run)]
-    MoodFusionApp -->|POST /recommend_movie {mood}| MovieAgent[Movie Agent (Cloud Run)]
+    graph TD
+        UserBrowser[User Browser (Frontend)] -->|HTTP Request| MoodFusionApp[MoodFusion Frontend (index.html, script.js)]
+        MoodFusionApp -->|POST /recommend_meal {mood, mealContext}| MealAgent[Meal Agent (Cloud Run)]
+        MoodFusionApp -->|POST /recommend_movie {mood}| MovieAgent[Movie Agent (Cloud Run)]
 
-    MealAgent -->|Gemini API Request (mood -> keywords)| Gemini[Vertex AI Gemini API]
-    MealAgent -->|Spoonacular API Request (keywords, type)| Spoonacular[Spoonacular API]
-    Spoonacular -->|Meal Data| MealAgent
-    Gemini -->|Keywords| MealAgent
-    MealAgent -->|JSON Response (Meal Data)| MoodFusionApp
+        MealAgent -->|Gemini API Request (mood -> keywords)| Gemini[Vertex AI Gemini API]
+        MealAgent -->|Spoonacular API Request (keywords, type)| Spoonacular[Spoonacular API]
+        Spoonacular -->|Meal Data| MealAgent
+        Gemini -->|Keywords| MealAgent
+        MealAgent -->|JSON Response (Meal Data)| MoodFusionApp
 
-    MovieAgent -->|Gemini API Request (mood -> genres)| Gemini
-    MovieAgent -->|TMDB Discover API Request (genres)| TMDBDiscover[TMDB API (Discover)]
-    MovieAgent -->|TMDB Details API Request (movie_id)| TMDBDetails[TMDB API (Details)]
-    TMDBDiscover -->|Movie List| MovieAgent
-    TMDBDetails -->|Detailed Movie Data| MovieAgent
-    Gemini -->|Genres| MovieAgent
-    MovieAgent -->|JSON Response (Movie Data)| MoodFusionApp
+        MovieAgent -->|Gemini API Request (mood -> genres)| Gemini
+        MovieAgent -->|TMDB Discover API Request (genres)| TMDBDiscover[TMDB API (Discover)]
+        MovieAgent -->|TMDB Details API Request (movie_id)| TMDBDetails[TMDB API (Details)]
+        TMDBDiscover -->|Movie List| MovieAgent
+        TMDBDetails -->|Detailed Movie Data| MovieAgent
+        Gemini -->|Genres| MovieAgent
+        MovieAgent -->|JSON Response (Movie Data)| MoodFusionApp
 
-    subgraph Google Cloud Project
-        MealAgent -- Managed Service --> CloudRun[Cloud Run]
-        MovieAgent -- Managed Service --> CloudRun
-        Gemini -- API Access --> VertexAI[Vertex AI]
-        SecretManager[Secret Manager] -->|API Keys| MealAgent
-        SecretManager -->|API Keys| MovieAgent
-    end
+        subgraph Google Cloud Project
+            MealAgent -- Managed Service --> CloudRun[Cloud Run]
+            MovieAgent -- Managed Service --> CloudRun
+            Gemini -- API Access --> VertexAI[Vertex AI]
+            SecretManager[Secret Manager] -->|API Keys| MealAgent
+            SecretManager -->|API Keys| MovieAgent
+        end
 
 Workflow:
 
