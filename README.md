@@ -4,24 +4,23 @@
 ## Find Your Perfect Vibe: Curated Meals & Movies for Every Mood!
 
 ## Table of Contents
-- [Cinemunch](#cinemunch)
-- [Meal and Movie Recommender](#meal-and-movie-recommender)
-  - [Find Your Perfect Vibe: Curated Meals \& Movies for Every Mood!](#find-your-perfect-vibe-curated-meals--movies-for-every-mood)
-  - [Table of Contents](#table-of-contents)
-  - [Demo](#demo)
-  - [Problem Statement](#problem-statement)
-  - [Solution](#solution)
-  - [Key Features](#key-features)
-  - [Technology Stack](#technology-stack)
-  - [Architecture](#architecture)
-  - [Workflow:](#workflow)
-  - [Google Agent Development Kit (ADK) Usage](#google-agent-development-kit-adk-usage)
-  - [Setup \& Deployment](#setup--deployment)
-  - [Usage](#usage)
-  - [Future Enhancements](#future-enhancements)
-  - [Challenges \& Learnings](#challenges--learnings)
-  - [Attribution](#attribution)
-  - [Contact](#contact)
+1. [Demo](#demo)
+  
+2. [Problem Statement](#problem-statement)
+  
+3. [Solution](#solution)
+  
+4. [Key Features](#key-features)
+  
+5. [Technology Stack](#technology-stack)
+  
+6. [Architecture](#architecture)
+
+7. [Workflow:](#workflow)
+
+8. [Google Agent Development Kit (ADK) Usage](#google-agent-development-kit-adk-usage)
+
+9. [Setup \& Deployment](#setup--deployment)
 
   * [Prerequisites](#prerequisites)
   
