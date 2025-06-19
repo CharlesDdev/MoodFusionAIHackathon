@@ -254,11 +254,11 @@ Navigate back to the project root:
 cd ..
 
 **Frontend Setup**
-    * **Update** frontend/script.js:
+    **Update** frontend/script.js:
 
-    * Open frontend/script.js.
+    Open frontend/script.js.
 
-    * Replace https://meal-agent-702694291445.us-central1.run.app/recommend_meal with your actual MEAL_AGENT_URL.
+    Replace https://meal-agent-702694291445.us-central1.run.app/recommend_meal with your actual MEAL_AGENT_URL.
 
     * Replace https://movie-agent-702694291445.us-central1.run.app/recommend_movie with your actual MOVIE_AGENT_URL.
 
