@@ -11,6 +11,7 @@
   - [Key Features](#key-features)
   - [Technology Stack](#technology-stack)
   - [Architecture](#architecture)
+  - [Workflow:](#workflow)
   - [Google Agent Development Kit (ADK) Usage](#google-agent-development-kit-adk-usage)
   - [Setup \& Deployment](#setup--deployment)
   - [Usage](#usage)
@@ -111,15 +112,14 @@ The MoodFusion Recommender follows a client-server architecture with specialized
             SecretManager -->|API Keys| MovieAgent
         end
 
-Workflow:
+## Workflow:
+1. The user enters a mood in the frontend.
 
-The user enters a mood in the frontend.
+2. The frontend determines the current time of day for meal context.
 
-The frontend determines the current time of day for meal context.
+3. Simultaneously, two asynchronous API calls are made from the frontend to the deployed Cloud Run agents: meal-agent and movie-agent.
 
-Simultaneously, two asynchronous API calls are made from the frontend to the deployed Cloud Run agents: meal-agent and movie-agent.
-
-Meal Agent (Built with ADK Principles):
+4. **Meal Agent (Built with ADK Principles):**
 
 Receives mood and mealContext.
 
@@ -129,7 +129,7 @@ Calls Spoonacular API with these keywords and a meal type filter, ensuring no de
 
 Selects a random recipe and returns its title, image, description, and source URL.
 
-Movie Agent (Built with ADK Principles):
+5. **Movie Agent (Built with ADK Principles):**
 
 Receives mood.
 
@@ -144,71 +144,56 @@ Returns movie title, poster URL, description, source URL, and detailed info.
 The frontend receives responses from both agents and dynamically updates the UI to display the meal and movie recommendations.
 
 ## Google Agent Development Kit (ADK) Usage
-
 The Google Agent Development Kit (ADK) provided the foundational tools and architectural patterns that significantly streamlined the development of our MoodFusion Recommender.
 
-How ADK was utilized:
+* **How ADK was utilized:**
+    * **Modular Agent Design:**The ADK encouraged the creation of distinct, independent agents (meal-agent and movie-agent). This modularity makes the system highly scalable, maintainable, and allows for individual agent updates or expansions without affecting the entire application.
 
-Modular Agent Design: The ADK encouraged the creation of distinct, independent agents (meal-agent and movie-agent). This modularity makes the system highly scalable, maintainable, and allows for individual agent updates or expansions without affecting the entire application.
+    * **Generative AI Integration:** The ADK provided the framework and best practices for integrating the Gemini API (via Vertex AI GenerativeModel) into our agents. This allowed us to quickly implement sophisticated mood-to-keyword/genre inference directly within our Python services.
 
-Generative AI Integration: The ADK provided the framework and best practices for integrating the Gemini API (via Vertex AI GenerativeModel) into our agents. This allowed us to quickly implement sophisticated mood-to-keyword/genre inference directly within our Python services.
+    * **Scalable Deployment:** The ADK's emphasis on containerization (Docker) and serverless deployment (Google Cloud Run) was pivotal. This enabled us to deploy our agents as highly scalable, cost-effective microservices that can handle varying loads without manual infrastructure management.
 
-Scalable Deployment: The ADK's emphasis on containerization (Docker) and serverless deployment (Google Cloud Run) was pivotal. This enabled us to deploy our agents as highly scalable, cost-effective microservices that can handle varying loads without manual infrastructure management.
+    * **Secure Credential Management:** The recommended use of Google Secret Manager within the ADK ecosystem ensured that our API keys were securely stored and accessed by our agents, a crucial security best practice.
 
-Secure Credential Management: The recommended use of Google Secret Manager within the ADK ecosystem ensured that our API keys were securely stored and accessed by our agents, a crucial security best practice.
-
-Rapid Prototyping & Iteration: The ADK's streamlined approach allowed for rapid development and iterative improvements, enabling us to quickly experiment with prompt engineering and API integrations to achieve precise recommendation quality.
+    * **Rapid Prototyping & Iteration:** The ADK's streamlined approach allowed for rapid development and iterative improvements, enabling us to quickly experiment with prompt engineering and API integrations to achieve precise recommendation quality.
 
 ## Setup & Deployment
-
 Follow these steps to set up and deploy your MoodFusion Recommender.
 
-Prerequisites
-Google Cloud Project:
+**Prerequisites**
+1. **`Google Cloud` Project:**
 
-Create a new Google Cloud Project or use an existing one.
+    * Create a new Google Cloud Project or use an existing one.
+    * Enable the following APIs:
 
-Enable the following APIs:
+        * Cloud Run API
+        * Secret Manager API
+        * Vertex AI API
 
-Cloud Run API
+    * Set up billing for the project.
 
-Secret Manager API
+2. **`Google Cloud SDK`:** Install and initialize the gcloud CLI tool on your local machine.
 
-Vertex AI API
+    * gcloud init
+    * gcloud auth login
+    * gcloud config set project [YOUR_PROJECT_ID]
 
-Set up billing for the project.
+3. **Docker:** Install Docker Desktop (or Docker Engine) on your local machine.
 
-Google Cloud SDK: Install and initialize the gcloud CLI tool on your local machine.
+4. **Git:** Install Git.
 
-gcloud init
+5. **API Keys:**
+    * **Spoonacular API Key:** Get one from Spoonacular.com.
 
-gcloud auth login
+    * **TMDB API Key:** Get one from TheMovieDB.org/settings/api.
 
-gcloud config set project [YOUR_PROJECT_ID]
-
-Docker: Install Docker Desktop (or Docker Engine) on your local machine.
-
-Git: Install Git.
-
-API Keys:
-
-Spoonacular API Key: Get one from Spoonacular.com.
-
-TMDB API Key: Get one from TheMovieDB.org/settings/api.
-
-Google Cloud Setup
-Create Secrets in Secret Manager:
-
-Store your Spoonacular API key:
-
+**Google Cloud Setup**
+1. **Create Secrets in Secret Manager:**
+    * Store your Spoonacular API key:
 echo "YOUR_SPOONACULAR_API_KEY" | gcloud secrets create spoonacular_api_key --data-file=- --project=[YOUR_PROJECT_ID]
-
-Store your TMDB API key:
-
+    * Store your TMDB API key:
 echo "YOUR_TMDB_API_KEY" | gcloud secrets create tmdb_api_key --data-file=- --project=[YOUR_PROJECT_ID]
-
-Grant your Cloud Run service accounts access to these secrets. For each secret:
-
+    * Grant your Cloud Run service accounts access to these secrets. For each secret:
 gcloud secrets add-iam-policy-binding spoonacular_api_key \
     --member="serviceAccount:[YOUR_PROJECT_NUMBER]-compute@developer.gserviceaccount.com" \
     --role="roles/secretmanager.secretAccessor" --project=[YOUR_PROJECT_ID]
@@ -219,36 +204,34 @@ gcloud secrets add-iam-policy-binding tmdb_api_key \
 
 (Replace [YOUR_PROJECT_NUMBER] with your actual Google Cloud Project Number, found in your GCP console dashboard).
 
-Agent Deployment (Backend)
+**Agent Deployment (Backend)**
 Navigate to your project's root directory in your terminal.
-
-Deploy the meal-agent:
-
-Navigate to the meal-agent directory:
+1. **Deploy the** meal-agent:
+* Navigate to the meal-agent directory:
 
 cd meal-agent
 
-Build the Docker image:
+* Build the Docker image:
 
 docker build --platform linux/amd64 -t gcr.io/[YOUR_PROJECT_ID]/meal-agent:latest .
 
-Push the image to Google Container Registry:
+* Push the image to Google Container Registry:
 
 docker push gcr.io/[YOUR_PROJECT_ID]/meal-agent:latest
 
-Deploy to Cloud Run:
+* Deploy to Cloud Run:
 
 gcloud run deploy meal-agent --image gcr.io/[YOUR_PROJECT_ID]/meal-agent:latest \
     --platform managed --region us-central1 --allow-unauthenticated \
     --set-env-vars GCP_PROJECT_ID=[YOUR_PROJECT_ID]
 
-IMPORTANT: Note down the URL provided after successful deployment. This will be your MEAL_AGENT_URL.
+* **IMPORTANT:** Note down the URL provided after successful deployment. This will be your MEAL_AGENT_URL.
 
-Navigate back to the project root:
+* Navigate back to the project root:
 
 cd ..
 
-Deploy the movie-agent:
+2. **Deploy the** movie-agent:
 
 Navigate to the movie-agent directory:
 
@@ -268,86 +251,85 @@ gcloud run deploy movie-agent --image gcr.io/[YOUR_PROJECT_ID]/movie-agent:lates
     --platform managed --region us-central1 --allow-unauthenticated \
     --set-env-vars GCP_PROJECT_ID=[YOUR_PROJECT_ID]
 
-IMPORTANT: Note down the URL provided after successful deployment. This will be your MOVIE_AGENT_URL.
+* **IMPORTANT:** Note down the URL provided after successful deployment. This will be your MOVIE_AGENT_URL.
 
 Navigate back to the project root:
 
 cd ..
 
-Frontend Setup
-Update frontend/script.js:
+**Frontend Setup**
+    * **Update** frontend/script.js:
 
-Open frontend/script.js.
+    * Open frontend/script.js.
 
-Replace https://meal-agent-702694291445.us-central1.run.app/recommend_meal with your actual MEAL_AGENT_URL.
+    * Replace https://meal-agent-702694291445.us-central1.run.app/recommend_meal with your actual MEAL_AGENT_URL.
 
-Replace https://movie-agent-702694291445.us-central1.run.app/recommend_movie with your actual MOVIE_AGENT_URL.
+    * Replace https://movie-agent-702694291445.us-central1.run.app/recommend_movie with your actual MOVIE_AGENT_URL.
 
-Save frontend/script.js.
+    * Save frontend/script.js.
 
-Run Locally (or Deploy to Static Hosting):
-
+**Run Locally (or Deploy to Static Hosting):**
 Open frontend/index.html directly in your web browser. All interactions will be handled by your deployed Cloud Run agents.
 
 ## Usage
-Enter your Mood: Type how you're feeling into the text input box (e.g., "happy," "tired," "adventurous").
+**Enter your Mood:** Type how you're feeling into the text input box (e.g., "happy," "tired," "adventurous").
 
-Use Quick Mood: Alternatively, select a pre-defined mood from the dropdown for rapid recommendation generation.
+**Use Quick Mood:** Alternatively, select a pre-defined mood from the dropdown for rapid recommendation generation.
 
-Get Recommendations: Click the "Get Recommendations" button (or select from the dropdown) to receive a paired meal and movie.
+**Get Recommendations:** Click the "Get Recommendations" button (or select from the dropdown) to receive a paired meal and movie.
 
-Explore Meal Details: View the meal title, image, description, and click "View Full Recipe" to go to the Spoonacular source.
+**Explore Meal Details:** View the meal title, image, description, and click "View Full Recipe" to go to the Spoonacular source.
 
-Explore Movie Details: View the movie title, poster, and description. Hover over the movie card to reveal additional details like year, runtime, MPAA rating, and TMDB user score. Click "View on TMDB" for more info.
+**Explore Movie Details:** View the movie title, poster, and description. Hover over the movie card to reveal additional details like year, runtime, MPAA rating, and TMDB user score. Click "View on TMDB" for more info.
 
-Switch Themes: Use the "Light" and "Dark" buttons to toggle the application's theme. Your preference will be saved.
+**Switch Themes:** Use the "Light" and "Dark" buttons to toggle the application's theme. Your preference will be saved.
 
 ## Future Enhancements
-Mobile Application (Flutter): Port the frontend to a native mobile application using Flutter, enabling use on phones and tablets, leveraging the existing backend microservices.
+* **Mobile Application (Flutter):** Port the frontend to a native mobile application using Flutter, enabling use on phones and tablets, leveraging the existing backend microservices.
 
-Refined Movie Genre Inference: Further enhance the movie agent's Gemini prompt and/or implement post-processing to completely eliminate animated/kid-focused content for non-child-specific moods, ensuring more precise adult/teenager-oriented recommendations.
+* **Refined Movie Genre Inference:** Further enhance the movie agent's Gemini prompt and/or implement post-processing to completely eliminate animated/kid-focused content for non-child-specific moods, ensuring more precise adult/teenager-oriented recommendations.
 
-User Accounts & Favorites: Allow users to save their favorite meal/movie pairings.
+* **User Accounts & Favorites:** Allow users to save their favorite meal/movie pairings.
 
-Recommendation History: Keep a log of past recommendations.
+* **Recommendation History:** Keep a log of past recommendations.
 
-More Recommendation Categories: Integrate music, books, activities, or games.
+* **More Recommendation Categories:** Integrate music, books, activities, or games.
 
-Refined Filtering: Add more explicit filters (e.g., "vegetarian meal," "action movie only").
+* **Refined Filtering:** Add more explicit filters (e.g., "vegetarian meal," "action movie only").
 
-Advanced Mood Analysis: Utilize more sophisticated NLP for deeper mood understanding.
+* **Advanced Mood Analysis:** Utilize more sophisticated NLP for deeper mood understanding.
 
-User Feedback Loop: Allow users to rate recommendations, improving future suggestions.
+* **User Feedback Loop:** Allow users to rate recommendations, improving future suggestions.
 
-Custom Modals for Alerts: Replace native alert() with custom UI for better styling.
+* **Custom Modals for Alerts:** Replace native alert() with custom UI for better styling.
 
 ## Challenges & Learnings
-Leveraging the ADK: Understanding how to effectively build, containerize, and deploy modular agents on Cloud Run to achieve scalable and independent services.
+* **Leveraging the ADK:** Understanding how to effectively build, containerize, and deploy modular agents on Cloud Run to achieve scalable and independent services.
 
-Debugging Distributed Systems: Identifying issues across frontend JavaScript, Flask agents, and external APIs required extensive use of browser developer tools (Console, Network tab) and Cloud Run logging.
+* **Debugging Distributed Systems:** Identifying issues across frontend JavaScript, Flask agents, and external APIs required extensive use of browser developer tools (Console, Network tab) and Cloud Run logging.
 
-Docker Caching: Overcoming issues where Dockerfile changes weren't picked up required implementing explicit cache-busting mechanisms (ARG CACHE_BREAKER_COPY).
+* **Docker Caching:** Overcoming issues where Dockerfile changes weren't picked up required implementing explicit cache-busting mechanisms (ARG CACHE_BREAKER_COPY).
 
-Frontend-Backend Data Mismatch: Resolving subtle mismatches in JSON key names (movieImageUrl vs moviePosterUrl) was crucial for displaying content correctly.
+* **Frontend-Backend Data Mismatch:** Resolving subtle mismatches in JSON key names (movieImageUrl vs moviePosterUrl) was crucial for displaying content correctly.
 
-Prompt Engineering for Specificity: Iteratively refining Gemini prompts with strong positive and negative constraints was key to achieving desired meal types (e.g., preventing desserts) and movie genres (e.g., reducing animated bias).
+* **Prompt Engineering for Specificity:** Iteratively refining Gemini prompts with strong positive and negative constraints was key to achieving desired meal types (e.g., preventing desserts) and movie genres (e.g., reducing animated bias).
 
-DOM Manipulation & Styling: Ensuring JavaScript correctly interacted with dynamically styled HTML elements (especially with CSS variables for theming) required careful sequencing with DOMContentLoaded.
+* **DOM Manipulation & Styling:** Ensuring JavaScript correctly interacted with dynamically styled HTML elements (especially with CSS variables for theming) required careful sequencing with DOMContentLoaded.
 
-Third-Party API Nuances: Learning how to effectively query Spoonacular (e.g., type parameter) and TMDB (e.g., secondary call for detailed movie data, release_dates for certification) for optimal results.
+* **Third-Party API Nuances:** Learning how to effectively query Spoonacular (e.g., type parameter) and TMDB (e.g., secondary call for detailed movie data, release_dates for certification) for optimal results.
 
 ## Attribution
-Agent Development Kit: Google ADK
+* **Agent Development Kit:** Google ADK
 
-Large Language Model: Gemini API (via Google Cloud Vertex AI)
+* **Large Language Model:** Gemini API (via Google Cloud Vertex AI)
 
-Meal Data: Spoonacular API
+* **Meal Data:** Spoonacular API
 
-Movie Data: The Movie Database (TMDB) API
+* **Movie Data:** The Movie Database (TMDB) API
 
-Styling Framework: Tailwind CSS
+* **Styling Framework:** Tailwind CSS
 
-Font: Google Fonts - Inter
+* **Font:** `Google Fonts` - Inter
 
 ## Contact
 Team Cinemunch
