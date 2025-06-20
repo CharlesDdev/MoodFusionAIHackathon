@@ -45,9 +45,7 @@
 ## Demo
 (If you have deployed the frontend publicly, insert a link here. Otherwise, judges will follow the "Setup & Deployment" instructions to run it locally.)
 
-* **Live Demo (if applicable):** https://your-public-frontend-url.com
-
-* **Video Demo (if applicable):** [Link to a short video showcasing features]
+* **Video Demo: https://youtu.be/oz_F-4U_Wi0
 
 ## Problem Statement
 
