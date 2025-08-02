@@ -43,7 +43,6 @@
 14. [Contact](#contact)
 
 ## Demo
-(If you have deployed the frontend publicly, insert a link here. Otherwise, judges will follow the "Setup & Deployment" instructions to run it locally.)
 
 * **Video Demo: https://youtu.be/oz_F-4U_Wi0
 
