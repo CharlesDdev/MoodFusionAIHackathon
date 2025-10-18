@@ -166,7 +166,10 @@ document.addEventListener('DOMContentLoaded', () => {
             mealTitleElem.textContent = data.mealTitle;
             mealImageElem.src = data.mealImageUrl || 'https://via.placeholder.com/312x231?text=No+Image';
             mealImageElem.alt = data.mealTitle;
-            mealDescriptionElem.innerHTML = data.mealDescription || 'No description available.';
+            // Sanitize any HTML from the API using DOMPurify to prevent XSS.
+            const rawDescription = data.mealDescription || 'No description available.';
+            const safeDescription = window.DOMPurify ? window.DOMPurify.sanitize(rawDescription, {ALLOWED_ATTR: ['href', 'title', 'target', 'rel'], ADD_ATTR: ['target', 'rel']}) : rawDescription;
+            mealDescriptionElem.innerHTML = safeDescription;
             mealSourceUrlElem.href = data.mealSourceUrl || '#';
             mealResultDiv.classList.remove('hidden');
         } else {
