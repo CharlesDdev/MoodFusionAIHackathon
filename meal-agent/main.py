@@ -59,8 +59,13 @@ def get_meal_recommendation(mood: str, meal_context: str): # MODIFIED: Accepts m
     # --- NEW: Dynamic Gemini Prompt and Spoonacular Type based on meal_context ---
     prompt_meal_type_description = ""
     spoonacular_meal_type_filter = ""
-    gemini_negative_contraints = """
-    **CRITICAL: ABSOLUTELY DO NOT SUGGEST ANY LUNCH, DINNER, DESSERT, OR SWEET SNACK ITEM.** This includes pasta, pizza, steak, chicken stir-fry, curries, stews, casseroles, sandwiches, muffins, cakes, pies, or anything not primarily a savory breakfast/brunch. Focus strictly on categories like eggs, pancakes, waffles, oatmeal, breakfast burritos, breakfast meats, savory toasts."""
+    # Standardize the variable name and tailor constraints per context
+    gemini_negative_constraints = (
+        """
+        **CRITICAL: ABSOLUTELY DO NOT SUGGEST ANY DESSERTS OR SWEET-ONLY SNACKS.**
+        Avoid cake, cookies, pies, muffins, ice cream, sweet pastries, or drinks.
+        """
+    )
     
     # Adjust prompt wording and Spoonacular filter based on context
     if meal_context == "breakfast":
@@ -71,8 +76,9 @@ def get_meal_recommendation(mood: str, meal_context: str): # MODIFIED: Accepts m
         """
     elif meal_context == "lunch":
         prompt_meal_type_description = "a satisfying **lunch** meal"
-        spoonacular_meal_type_filter = "lunch" # Specific Spoonacular type for lunch
-        gemini_negative_contraints = """
+        # Spoonacular does not support a 'lunch' type; use 'main course' to represent lunch-like meals
+        spoonacular_meal_type_filter = "main course"
+        gemini_negative_constraints = """
         **CRITICAL: ABSOLUTELY DO NOT SUGGEST ANY DESSERT, SWEET SNACK, BREAKFAST, OR HEAVY DINNER ITEMS.** This includes cake, cookies, pies, muffins, pancakes, eggs benedict, roasts, or heavy stews. Focus on lighter, savory lunch options.
         """
     elif meal_context == "dinner":
@@ -83,12 +89,14 @@ def get_meal_recommendation(mood: str, meal_context: str): # MODIFIED: Accepts m
         """
     else: # Default or 'general' context
         prompt_meal_type_description = "a satisfying **meal (breakfast, lunch, or dinner)**"
-        spoonacular_meal_type_filter = "main course,breakfast,lunch,appetizer,salad,soup" # Broader types for general context
+        # Do not constrain by type in general mode; allow broader search
+        spoonacular_meal_type_filter = ""
         gemini_negative_constraints = """
         **CRITICAL: ABSOLUTELY DO NOT SUGGEST ANY DESSERTS OR SWEET SNACKS.** This includes muffins, cakes, cookies, pies, tarts, ice cream, or anything sweet-focused.
         """
     gemini_prompt = f"""
 The user is feeling: "{mood}".
+{gemini_negative_constraints}
 Your task is to suggest 3-5 distinct food-related keywords that would perfectly match this mood for {prompt_meal_type_description}.
 
 **STRICTLY AVOID** suggesting any:
@@ -145,10 +153,12 @@ Return the keywords as a comma-separated list.
         "instructionsRequired": True,
         "minCalories": 250, # Adjusted min calories to allow for lighter breakfast/lunch options
         "maxReadyTime": 90,
-        "type": spoonacular_meal_type_filter, # MODIFIED: Use dynamically determined type
         "sort": "random",
         "excludeIngredients": "muffin, pastry, cookie, cake, ice cream, donut, sweet, honey, chocolate, tart, dessert, pie, brownie"
     }
+    # Only include 'type' if we have a valid Spoonacular type
+    if spoonacular_meal_type_filter:
+        params["type"] = spoonacular_meal_type_filter
     logger.info(f"Spoonacular API call parameters: {params}")
 
     try:
@@ -166,7 +176,6 @@ Return the keywords as a comma-separated list.
                 "number": 5,
                 "addRecipeInformation": True,
                 "instructionsRequired": True,
-                "type": "main course,breakfast,lunch", # Broader fallback type
                 "sort": "random"
             }
             response_fallback = requests.get(spoonacular_url, params=params_fallback)
@@ -199,7 +208,8 @@ Return the keywords as a comma-separated list.
 
     except requests.exceptions.RequestException as e:
         logger.error(f"Error calling Spoonacular API: {e}")
-        if response.status_code == 402:
+        status_code = getattr(getattr(e, "response", None), "status_code", None)
+        if status_code == 402:
             raise Exception("Spoonacular API Daily Limit Reached or Plan Expired.")
         raise
     except Exception as e:

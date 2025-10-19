@@ -155,7 +155,7 @@
                         <img id="mealImage" src="" alt="Meal Image" class="w-full h-auto rounded-lg shadow-md mx-auto mb-4 object-cover max-h-60">
                     </div>
                     <p id="mealDescription" class="leading-relaxed mb-4 description-content"></p>
-                    <a id="mealSourceUrl" href="#" target="_blank" class="block font-medium text-center transition duration-200
+                    <a id="mealSourceUrl" href="#" target="_blank" rel="noopener noreferrer" class="block font-medium text-center transition duration-200
                                     text-[var(--meal-accent-text)] hover:text-[var(--button-hover-bg)]">View Full Recipe</a>
                 </div>
 
@@ -179,13 +179,15 @@
                     </div>
 
                     <p id="movieDescription" class="leading-relaxed mb-4 description-content"></p>
-                    <a id="movieSourceUrl" href="#" target="_blank" class="block font-medium text-center transition duration-200
+                    <a id="movieSourceUrl" href="#" target="_blank" rel="noopener noreferrer" class="block font-medium text-center transition duration-200
                                     text-[var(--movie-accent-text)] hover:text-[var(--button-hover-bg)]">View on TMDB</a>
                 </div>
             </main>
         </div>
     </div>
 
+    <!-- DOMPurify for safe HTML sanitization -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
     <!-- Your existing script.js will be linked here -->
     <script src="script.js"></script>
 </body>
