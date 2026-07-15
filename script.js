@@ -5,11 +5,13 @@ const MOVIE_AGENT_URL = 'https://movie-agent-702694291445.us-central1.run.app/re
 // Ensure all DOM-dependent code runs after the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     // --- Element References ---
-    const moodInput = document.getElementById('moodInput');
+    const partnerOneMoodInput = document.getElementById('partnerOneMoodInput');
+    const partnerTwoMoodInput = document.getElementById('partnerTwoMoodInput');
+    const moodValidation = document.getElementById('moodValidation');
+    const moodChoiceButtons = document.querySelectorAll('.mood-choice');
     const getRecommendationsBtn = document.getElementById('getRecommendationsBtn');
     const loadingSpinner = document.getElementById('loadingSpinner');
     const buttonText = document.getElementById('buttonText');
-    const quickMoodSelect = document.getElementById('quickMoodSelect');
     
     const mealResultDiv = document.getElementById('mealResultDiv');
     const mealTitleElem = document.getElementById('mealTitle');
@@ -33,6 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const lightModeBtn = document.getElementById('lightModeBtn');
     const darkModeBtn = document.getElementById('darkModeBtn');
     const body = document.body; // Reference to the body element
+    const selectedMoods = {
+        one: '',
+        two: ''
+    };
 
     // --- Theme Logic ---
     // Function to set the theme
@@ -75,21 +81,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Listener for the Main Button ---
     getRecommendationsBtn.addEventListener('click', async () => {
-        const mood = moodInput.value.trim();
-        if (!mood) {
-            alert('Please enter your mood!'); 
+        const dateNightInput = getDateNightInput();
+        const validationMessage = getValidationMessage(dateNightInput);
+        if (validationMessage) {
+            showValidation(validationMessage);
             return;
         }
 
+        clearValidation();
         hideAllResults();
         showLoading();
 
         const mealContext = getMealContext();
+        const combinedMood = toCombinedMoodString(dateNightInput);
 
         try {
             const [mealResponse, movieResponse] = await Promise.allSettled([
-                fetchRecommendation(MEAL_AGENT_URL, mood, mealContext), 
-                MOVIE_AGENT_URL !== 'YOUR_MOVIE_AGENT_CLOUD_RUN_URL/recommend_movie' ? fetchRecommendation(MOVIE_AGENT_URL, mood) : Promise.resolve(null)
+                fetchRecommendation(MEAL_AGENT_URL, combinedMood, mealContext),
+                MOVIE_AGENT_URL !== 'YOUR_MOVIE_AGENT_CLOUD_RUN_URL/recommend_movie' ? fetchRecommendation(MOVIE_AGENT_URL, combinedMood) : Promise.resolve(null)
             ]);
 
             hideLoading();
@@ -115,17 +124,85 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Event Listener for the Quick Mood Select Dropdown ---
-    quickMoodSelect.addEventListener('change', () => {
-        const selectedMood = quickMoodSelect.value;
-        if (selectedMood) {
-            moodInput.value = selectedMood;
-            getRecommendationsBtn.click();
-        }
-        quickMoodSelect.value = "";
+    moodChoiceButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            const partner = button.dataset.partner;
+            const mood = button.dataset.mood;
+            selectedMoods[partner] = selectedMoods[partner] === mood ? '' : mood;
+            updateMoodChoiceButtons(partner);
+            clearValidationIfValid();
+        });
     });
 
+    partnerOneMoodInput.addEventListener('input', clearValidationIfValid);
+    partnerTwoMoodInput.addEventListener('input', clearValidationIfValid);
+
     // --- Helper Functions ---
+
+    function getDateNightInput() {
+        return {
+            partnerOneMood: getPartnerMood('one', partnerOneMoodInput),
+            partnerTwoMood: getPartnerMood('two', partnerTwoMoodInput)
+        };
+    }
+
+    function getPartnerMood(partner, inputElement) {
+        const typedMood = inputElement.value.trim();
+        return typedMood || selectedMoods[partner];
+    }
+
+    function toCombinedMoodString(dateNightInput) {
+        return `Partner One feels: ${dateNightInput.partnerOneMood}. Partner Two feels: ${dateNightInput.partnerTwoMood}.`;
+    }
+
+    function getValidationMessage(dateNightInput) {
+        const missingPartnerOne = !dateNightInput.partnerOneMood;
+        const missingPartnerTwo = !dateNightInput.partnerTwoMood;
+
+        if (missingPartnerOne && missingPartnerTwo) {
+            return 'Please add a mood for Partner One and Partner Two before planning your night.';
+        }
+        if (missingPartnerOne) {
+            return 'Please add a mood for Partner One before planning your night.';
+        }
+        if (missingPartnerTwo) {
+            return 'Please add a mood for Partner Two before planning your night.';
+        }
+        return '';
+    }
+
+    function showValidation(message) {
+        moodValidation.textContent = message;
+        moodValidation.classList.remove('hidden');
+    }
+
+    function clearValidation() {
+        moodValidation.textContent = '';
+        moodValidation.classList.add('hidden');
+    }
+
+    function clearValidationIfValid() {
+        if (!getValidationMessage(getDateNightInput())) {
+            clearValidation();
+        }
+    }
+
+    function updateMoodChoiceButtons(partner) {
+        moodChoiceButtons.forEach((button) => {
+            if (button.dataset.partner !== partner) {
+                return;
+            }
+
+            const isSelected = selectedMoods[partner] === button.dataset.mood;
+            button.setAttribute('aria-pressed', String(isSelected));
+            button.classList.toggle('bg-[var(--button-bg)]', isSelected);
+            button.classList.toggle('text-white', isSelected);
+            button.classList.toggle('font-bold', isSelected);
+            button.classList.toggle('shadow-md', isSelected);
+            button.classList.toggle('border-transparent', isSelected);
+            button.classList.toggle('bg-[var(--secondary-bg)]', !isSelected);
+        });
+    }
 
     function getMealContext() {
         const now = new Date();
@@ -201,13 +278,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showLoading() {
         loadingSpinner.classList.remove('hidden');
-        buttonText.textContent = 'Getting Recommendations...';
+        buttonText.textContent = 'Planning Our Night...';
         getRecommendationsBtn.disabled = true;
     }
 
     function hideLoading() {
         loadingSpinner.classList.add('hidden');
-        buttonText.textContent = 'Get Recommendations';
+        buttonText.textContent = 'Plan Our Night';
         getRecommendationsBtn.disabled = false;
     }
 
