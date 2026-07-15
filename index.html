@@ -83,6 +83,12 @@
         .description-content a:hover {
             color: var(--button-hover-bg);
         }
+        .mood-choice:focus,
+        .mood-choice:focus-visible {
+            outline: 3px solid var(--button-bg);
+            outline-offset: 3px;
+            box-shadow: 0 0 0 6px var(--primary-bg);
+        }
     </style>
 </head>
 <body>
@@ -91,8 +97,8 @@
                     bg-[var(--secondary-bg)] border border-[var(--border-color)] text-[var(--text-primary)]
                     transition-colors duration-300">
             <header class="text-center">
-                <h1 class="text-4xl font-extrabold mb-2">Cinemunch<br>Meal & Movie Recommender</h1>
-                <p class="text-lg text-[var(--text-secondary)]">Tell me how you're feeling, and I'll recommend a movie and a meal!</p>
+                <h1 class="text-4xl font-extrabold mb-2">Cinemunch<br>Couples Date-Night Planner</h1>
+                <p class="text-lg text-[var(--text-secondary)]">Share both moods and get one meal and one movie for your night together.</p>
             </header>
 
             <!-- Theme Controls Section -->
@@ -105,42 +111,61 @@
                 </div>
             </section>
 
-            <section class="flex flex-col md:flex-row items-center justify-center gap-4">
-                <div class="flex-grow w-full md:w-auto space-y-3">
-                    <label for="moodInput" class="sr-only">My mood is:</label>
-                    <input
-                        type="text"
-                        id="moodInput"
-                        placeholder="My mood is: happy, hungry, tired..."
-                        class="w-full p-3 rounded-lg shadow-sm
-                               border border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--text-primary)]
-                               focus:ring-2 focus:ring-[var(--button-bg)] focus:border-transparent
-                               transition-colors duration-300"
-                    >
-                    <label for="quickMoodSelect" class="sr-only">Or pick a quick mood:</label>
-                    <select id="quickMoodSelect" class="w-full p-3 rounded-lg shadow-sm
-                                     border border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--text-primary)]
-                                     focus:ring-2 focus:ring-[var(--button-bg)] focus:border-transparent
-                                     transition-colors duration-300">
-                        <option value="">-- Or pick a quick mood --</option>
-                        <option value="happy">Happy</option>
-                        <option value="calm">Calm</option>
-                        <option value="energetic">Energetic</option>
-                        <option value="adventurous">Adventurous</option>
-                        <option value="cozy">Cozy</option>
-                        <option value="romantic">Romantic</option>
-                        <option value="tired">Tired</option>
-                        <option value="hungry">Hungry</option>
-                        <option value="stressed">Stressed</option>
-                    </select>
+            <section class="space-y-5" aria-labelledby="dateNightFormHeading">
+                <div>
+                    <h2 id="dateNightFormHeading" class="text-2xl font-bold text-center">How are you both feeling?</h2>
+                    <p class="mt-2 text-center text-[var(--text-secondary)]">Type a mood, choose one below, or do both for each partner.</p>
                 </div>
+
+                <div id="moodValidation" class="hidden rounded-lg border border-red-400 bg-red-50 px-4 py-3 text-red-800 dark:bg-red-950 dark:text-red-100" role="alert" aria-live="polite"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="space-y-3 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4">
+                        <label for="partnerOneMoodInput" class="block font-semibold">Partner One mood</label>
+                        <input
+                            type="text"
+                            id="partnerOneMoodInput"
+                            placeholder="e.g., cozy, tired, playful"
+                            class="w-full p-3 rounded-lg shadow-sm
+                                   border border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--text-primary)]
+                                   focus:ring-2 focus:ring-[var(--button-bg)] focus:border-transparent
+                                   transition-colors duration-300"
+                        >
+                        <div class="flex flex-wrap gap-2" aria-label="Partner One common mood choices">
+                            <button type="button" class="mood-choice px-3 py-2 rounded-full border border-[var(--border-color)] bg-[var(--secondary-bg)] text-sm transition-colors" data-partner="one" data-mood="cozy" aria-pressed="false">Cozy</button>
+                            <button type="button" class="mood-choice px-3 py-2 rounded-full border border-[var(--border-color)] bg-[var(--secondary-bg)] text-sm transition-colors" data-partner="one" data-mood="romantic" aria-pressed="false">Romantic</button>
+                            <button type="button" class="mood-choice px-3 py-2 rounded-full border border-[var(--border-color)] bg-[var(--secondary-bg)] text-sm transition-colors" data-partner="one" data-mood="adventurous" aria-pressed="false">Adventurous</button>
+                            <button type="button" class="mood-choice px-3 py-2 rounded-full border border-[var(--border-color)] bg-[var(--secondary-bg)] text-sm transition-colors" data-partner="one" data-mood="tired" aria-pressed="false">Tired</button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4">
+                        <label for="partnerTwoMoodInput" class="block font-semibold">Partner Two mood</label>
+                        <input
+                            type="text"
+                            id="partnerTwoMoodInput"
+                            placeholder="e.g., hungry, calm, energetic"
+                            class="w-full p-3 rounded-lg shadow-sm
+                                   border border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--text-primary)]
+                                   focus:ring-2 focus:ring-[var(--button-bg)] focus:border-transparent
+                                   transition-colors duration-300"
+                        >
+                        <div class="flex flex-wrap gap-2" aria-label="Partner Two common mood choices">
+                            <button type="button" class="mood-choice px-3 py-2 rounded-full border border-[var(--border-color)] bg-[var(--secondary-bg)] text-sm transition-colors" data-partner="two" data-mood="cozy" aria-pressed="false">Cozy</button>
+                            <button type="button" class="mood-choice px-3 py-2 rounded-full border border-[var(--border-color)] bg-[var(--secondary-bg)] text-sm transition-colors" data-partner="two" data-mood="romantic" aria-pressed="false">Romantic</button>
+                            <button type="button" class="mood-choice px-3 py-2 rounded-full border border-[var(--border-color)] bg-[var(--secondary-bg)] text-sm transition-colors" data-partner="two" data-mood="adventurous" aria-pressed="false">Adventurous</button>
+                            <button type="button" class="mood-choice px-3 py-2 rounded-full border border-[var(--border-color)] bg-[var(--secondary-bg)] text-sm transition-colors" data-partner="two" data-mood="tired" aria-pressed="false">Tired</button>
+                        </div>
+                    </div>
+                </div>
+
                 <button
                     id="getRecommendationsBtn"
-                    class="w-full md:w-auto font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center gap-2
+                    class="w-full md:w-auto mx-auto font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center gap-2
                            bg-[var(--button-bg)] text-white hover:bg-[var(--button-hover-bg)]"
-                    title="Click to get new recommendations, or change your mood!"
+                    title="Plan a meal and movie for both partners"
                 >
-                    <span id="buttonText">Get Recommendations</span>
+                    <span id="buttonText">Plan Our Night</span>
                     <div id="loadingSpinner" class="spinner hidden"></div>
                 </button>
             </section>

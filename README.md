@@ -48,15 +48,15 @@
 
 ## Problem Statement
 
-In an age of endless content, deciding "what to eat" and "what to watch" can be overwhelming. Users often seek recommendations that align with their current mood, but generic suggestions fall flat. Existing platforms rarely offer a cohesive, mood-aware pairing of meal and entertainment, leaving users to juggle multiple apps and decision fatigue. This hackathon challenged me to build intelligent, modular agents to solve real-world problems.
+In an age of endless content, deciding "what to eat" and "what to watch" can be overwhelming, especially when two people are trying to plan a night together. Users often seek recommendations that align with both partners' moods, but generic suggestions fall flat. Existing platforms rarely offer a cohesive, mood-aware pairing of meal and entertainment, leaving users to juggle multiple apps and decision fatigue. This hackathon challenged me to build intelligent, modular agents to solve real-world problems.
 
 ## Solution
 
-Cinemunch's Meal & Movie Recommender is an intelligent web application built using the Google Agent Development Kit (ADK). It solves the decision fatigue problem by providing curated meal and movie recommendations based on the user's emotional state and the time of day. Leveraging the power of Generative AI (Gemini API), specialized external APIs (Spoonacular, TMDB), and the scalable microservice architecture facilitated by the ADK, MoodFusion offers personalized pairings, simplifying decision-making and enhancing the user experience.
+Cinemunch's Meal & Movie Recommender is an intelligent web application built using the Google Agent Development Kit (ADK). It solves the decision fatigue problem by providing curated meal and movie recommendations based on Partner One's mood, Partner Two's mood, and the time of day. Leveraging the power of Generative AI (Gemini API), specialized external APIs (Spoonacular, TMDB), and the scalable microservice architecture facilitated by the ADK, MoodFusion offers personalized pairings, simplifying decision-making and enhancing the user experience.
 
 ## Key Features
 
-* **Mood-Based Recommendations:** Get personalized meal and movie suggestions by simply typing or selecting your current mood (e.g., "happy," "cozy," "adventurous").
+* **Two-Partner Mood-Based Recommendations:** Partner One and Partner Two can each type a mood or select a common mood choice. The current frontend combines both partner moods into one temporary compatibility string before calling the existing meal and movie endpoints.
 
 * **Time-of-Day Aware Meals:** The meal agent intelligently detects the time of day (morning, midday, evening) and tailors meal recommendations accordingly (Breakfast, Lunch, or Dinner).
 
@@ -132,26 +132,28 @@ The MoodFusion Recommender follows a client-server architecture with specialized
         end
 
 ## Workflow:
-1. The user enters a mood in the frontend.
+1. Partner One and Partner Two each enter or select a mood in the frontend.
 
-2. The frontend determines the current time of day for meal context.
+2. The frontend creates an internal input object with `partnerOneMood` and `partnerTwoMood`, then converts it into the existing single `mood` request field at the API boundary. The temporary format is: `Partner One feels: [mood]. Partner Two feels: [mood].`
 
-3. Simultaneously, two asynchronous API calls are made from the frontend to the deployed Cloud Run agents: meal-agent and movie-agent.
+3. The frontend determines the current time of day for meal context.
 
-4. **Meal Agent (Built with ADK Principles):**
+4. Simultaneously, two asynchronous API calls are made from the frontend to the deployed Cloud Run agents: meal-agent and movie-agent.
+
+5. **Meal Agent (Built with ADK Principles):**
     * Receives mood and mealContext.
     * Uses Gemini to infer food keywords matching the mood and meal context.
     * Calls Spoonacular API with these keywords and a meal type filter, ensuring no desserts.
     * Selects a random recipe and returns its title, image, description, and source URL.
 
-5. **Movie Agent (Built with ADK Principles):**
+6. **Movie Agent (Built with ADK Principles):**
     * Receives mood.
     * Uses Gemini to infer movie genres matching the mood, explicitly avoiding animated/family genres for general moods.
     * Calls TMDB Discover API to find movies by genre.  
     * Makes a second TMDB API call to fetch detailed information (year, runtime, ratings) for the selected movie.
     * Returns movie title, poster URL, description, source URL, and detailed info.
 
-6. The frontend receives responses from both agents and dynamically updates the UI to display the meal and movie recommendations.
+7. The frontend receives responses from both agents and dynamically updates the UI to display the meal and movie recommendations.
 
 ## Google Agent Development Kit (ADK) Usage
 The Google Agent Development Kit (ADK) provided the foundational tools and architectural patterns that significantly streamlined the development of our MoodFusion Recommender.
@@ -273,26 +275,26 @@ Navigate to your project's root directory in your terminal.
 
 **Frontend Setup**
 
- **Update** `frontend/script.js`:
+ **Update** `script.js`:
 
-  * Open `frontend/script.js`.
+  * Open `script.js` in the repository root.
 
   * Replace `https://meal-agent-702694291445.us-central1.run.app/recommend_meal with your actual MEAL_AGENT_URL`.
 
   * Replace `https://movie-agent-702694291445.us-central1.run.app/recommend_movie with your actual MOVIE_AGENT_URL`.
 
-  * Save `frontend/script.js`.
+  * Save `script.js`.
 
 **Run Locally (or Deploy to Static Hosting):**
 
-* Open `frontend/index.html` directly in your web browser. All interactions will be handled by your deployed Cloud Run agents.
+* Open `index.html` from the repository root directly in your web browser. All interactions will be handled by your deployed Cloud Run agents.
 
 ## Usage
-1. **Enter your Mood:** Type how you're feeling into the text input box (e.g., "happy," "tired," "adventurous").
+1. **Enter Partner One's Mood:** Type how Partner One is feeling or select one of the common mood choices.
 
-2. **Use Quick Mood:** Alternatively, select a pre-defined mood from the dropdown for rapid recommendation generation.
+2. **Enter Partner Two's Mood:** Type how Partner Two is feeling or select one of the common mood choices.
 
-3. **Get Recommendations:** Click the "Get Recommendations" button (or select from the dropdown) to receive a paired meal and movie.
+3. **Plan Your Night:** Click "Plan Our Night" to receive a paired meal and movie. The frontend temporarily combines both partner moods into the existing `mood` field so the current meal-agent and movie-agent contracts remain unchanged.
 
 4. **Explore Meal Details:** View the meal title, image, description, and click "View Full Recipe" to go to the Spoonacular source.
 
